@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.THelpMapper">
+    
+    <resultMap type="THelp" id="THelpResult">
+        <result property="id"    column="id"    />
+        <result property="helpName"    column="help_name"    />
+        <result property="title"    column="title"    />
+        <result property="body"    column="body"    />
+    </resultMap>
+
+    <sql id="selectTHelpVo">
+        select id, help_name, title, body from t_help
+    </sql>
+
+    <select id="selectTHelpList" parameterType="THelp" resultMap="THelpResult">
+        <include refid="selectTHelpVo"/>
+        <where>  
+            <if test="helpName != null  and helpName != ''"> and help_name like concat('%', #{helpName}, '%')</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="body != null  and body != ''"> and body = #{body}</if>
+        </where>
+    </select>
+    
+    <select id="selectTHelpById" parameterType="Long" resultMap="THelpResult">
+        <include refid="selectTHelpVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTHelp" parameterType="THelp" useGeneratedKeys="true" keyProperty="id">
+        insert into t_help
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="helpName != null  and helpName != ''">help_name,</if>
+            <if test="title != null  and title != ''">title,</if>
+            <if test="body != null  and body != ''">body,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="helpName != null  and helpName != ''">#{helpName},</if>
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="body != null  and body != ''">#{body},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTHelp" parameterType="THelp">
+        update t_help
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="helpName != null  and helpName != ''">help_name = #{helpName},</if>
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="body != null  and body != ''">body = #{body},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTHelpById" parameterType="Long">
+        delete from t_help where id = #{id}
+    </delete>
+
+    <delete id="deleteTHelpByIds" parameterType="String">
+        delete from t_help where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

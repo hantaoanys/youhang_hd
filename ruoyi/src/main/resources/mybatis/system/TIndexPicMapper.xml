@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.TIndexPicMapper">
+    
+    <resultMap type="TIndexPic" id="TIndexPicResult">
+        <result property="id"    column="id"    />
+        <result property="path"    column="path"    />
+        <result property="discription"    column="discription"    />
+        <result property="picSeq"    column="pic_seq"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="deleteTime"    column="delete_time"    />
+        <result property="isDeleted"    column="is_deleted"    />
+        <result property="createUser"    column="create_user"    />
+    </resultMap>
+
+    <sql id="selectTIndexPicVo">
+        select id, path, discription, pic_seq, create_time, update_time, delete_time, is_deleted, create_user from t_index_pic
+    </sql>
+
+    <select id="selectTIndexPicList" parameterType="TIndexPic" resultMap="TIndexPicResult">
+        <include refid="selectTIndexPicVo"/>
+        <where>  
+            <if test="path != null  and path != ''"> and path = #{path}</if>
+            <if test="discription != null  and discription != ''"> and discription = #{discription}</if>
+            <if test="picSeq != null  and picSeq != ''"> and pic_seq = #{picSeq}</if>
+            <if test="deleteTime != null "> and delete_time = #{deleteTime}</if>
+            <if test="isDeleted != null  and isDeleted != ''"> and is_deleted = #{isDeleted}</if>
+            <if test="createUser != null  and createUser != ''"> and create_user = #{createUser}</if>
+        </where>
+        ORDER  by pic_seq
+    </select>
+    
+    <select id="selectTIndexPicById" parameterType="Long" resultMap="TIndexPicResult">
+        <include refid="selectTIndexPicVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTIndexPic" parameterType="TIndexPic">
+        insert into t_index_pic
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="path != null  and path != ''">path,</if>
+            <if test="discription != null  and discription != ''">discription,</if>
+            <if test="picSeq != null  and picSeq != ''">pic_seq,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="deleteTime != null ">delete_time,</if>
+            <if test="isDeleted != null  and isDeleted != ''">is_deleted,</if>
+            <if test="createUser != null  and createUser != ''">create_user,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="path != null  and path != ''">#{path},</if>
+            <if test="discription != null  and discription != ''">#{discription},</if>
+            <if test="picSeq != null  and picSeq != ''">#{picSeq},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="deleteTime != null ">#{deleteTime},</if>
+            <if test="isDeleted != null  and isDeleted != ''">#{isDeleted},</if>
+            <if test="createUser != null  and createUser != ''">#{createUser},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTIndexPic" parameterType="TIndexPic">
+        update t_index_pic
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="path != null  and path != ''">path = #{path},</if>
+            <if test="discription != null  and discription != ''">discription = #{discription},</if>
+            <if test="picSeq != null  and picSeq != ''">pic_seq = #{picSeq},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="deleteTime != null ">delete_time = #{deleteTime},</if>
+            <if test="isDeleted != null  and isDeleted != ''">is_deleted = #{isDeleted},</if>
+            <if test="createUser != null  and createUser != ''">create_user = #{createUser},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTIndexPicById" parameterType="Long">
+        delete from t_index_pic where id = #{id}
+    </delete>
+
+    <delete id="deleteTIndexPicByIds" parameterType="String">
+        delete from t_index_pic where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

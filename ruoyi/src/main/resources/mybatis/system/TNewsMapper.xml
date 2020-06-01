@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.TNewsMapper">
+    
+    <resultMap type="TNews" id="TNewsResult">
+        <result property="id"    column="id"    />
+        <result property="newsTitle"    column="news_title"    />
+        <result property="newsType"    column="news_type"    />
+        <result property="newsSeq"    column="news_seq"    />
+        <result property="newsBody"    column="news_body"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="deleteTime"    column="delete_time"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="updateUser"    column="update_user"    />
+        <result property="deleteUser"    column="delete_user"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="likeNumber"    column="like_number"    />
+        <result property="viewNumber"    column="view_number"    />
+        <result property="commentNumber"    column="comment_number"    />
+        <result property="newsPicture"    column="news_picture"    />
+        <result property="param1"    column="param1"    />
+        <result property="param2"    column="param2"    />
+        <result property="param3"    column="param3"    />
+        <result property="param4"    column="param4"    />
+        <result property="param5"    column="param5"    />
+        <result property="param6"    column="param6"    />
+        <result property="param7"    column="param7"    />
+        <result property="param8"    column="param8"    />
+        <result property="param9"    column="param9"    />
+        <result property="param10"    column="param10"    />
+    </resultMap>
+
+    <sql id="selectTNewsVo">
+        select id, news_title, news_type, news_seq, news_body, create_time, update_time, delete_time, create_user, update_user, delete_user, is_delete, like_number, view_number, comment_number, news_picture, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10 from t_news
+    </sql>
+
+    <select id="selectTNewsList" parameterType="TNews" resultMap="TNewsResult">
+        <include refid="selectTNewsVo"/>
+        <where>  
+            <if test="newsTitle != null  and newsTitle != ''"> and news_title like concat(concat('%',#{newsTitle}),'%')</if>
+            <if test="newsType != null  and newsType != ''"> and news_type = #{newsType}</if>
+            <if test="newsSeq != null "> and news_seq = #{newsSeq}</if>
+            <if test="newsBody != null  and newsBody != ''"> and news_body like concat(concat('%',#{newsBody}),'%')</if>
+            <if test="deleteTime != null "> and delete_time = #{deleteTime}</if>
+            <if test="createUser != null  and createUser != ''"> and create_user = #{createUser}</if>
+            <if test="updateUser != null  and updateUser != ''"> and update_user = #{updateUser}</if>
+            <if test="deleteUser != null  and deleteUser != ''"> and delete_user = #{deleteUser}</if>
+            <if test="isDelete != null  and isDelete != ''"> and is_delete = #{isDelete}</if>
+            <if test="likeNumber != null "> and like_number = #{likeNumber}</if>
+            <if test="viewNumber != null "> and view_number = #{viewNumber}</if>
+            <if test="commentNumber != null "> and comment_number = #{commentNumber}</if>
+            <if test="newsPicture != null  and newsPicture != ''"> and news_picture = #{newsPicture}</if>
+            <if test="param1 != null  and param1 != ''"> and param1 = #{param1}</if>
+            <if test="param2 != null  and param2 != ''"> and param2 = #{param2}</if>
+            <if test="param3 != null  and param3 != ''"> and param3 = #{param3}</if>
+            <if test="param4 != null  and param4 != ''"> and param4 = #{param4}</if>
+            <if test="param5 != null  and param5 != ''"> and param5 = #{param5}</if>
+            <if test="param6 != null  and param6 != ''"> and param6 = #{param6}</if>
+            <if test="param7 != null  and param7 != ''"> and param7 = #{param7}</if>
+            <if test="param8 != null  and param8 != ''"> and param8 = #{param8}</if>
+            <if test="param9 != null  and param9 != ''"> and param9 = #{param9}</if>
+            <if test="param10 != null  and param10 != ''"> and param10 = #{param10}</if>
+        </where>
+        ORDER  by news_seq
+    </select>
+    
+    <select id="selectTNewsById" parameterType="Long" resultMap="TNewsResult">
+        <include refid="selectTNewsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTNews" parameterType="TNews" useGeneratedKeys="true" keyProperty="id">
+        insert into t_news
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="newsTitle != null  and newsTitle != ''">news_title,</if>
+            <if test="newsType != null  and newsType != ''">news_type,</if>
+            <if test="newsSeq != null ">news_seq,</if>
+            <if test="newsBody != null  and newsBody != ''">news_body,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="deleteTime != null ">delete_time,</if>
+            <if test="createUser != null  and createUser != ''">create_user,</if>
+            <if test="updateUser != null  and updateUser != ''">update_user,</if>
+            <if test="deleteUser != null  and deleteUser != ''">delete_user,</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete,</if>
+            <if test="likeNumber != null ">like_number,</if>
+            <if test="viewNumber != null ">view_number,</if>
+            <if test="commentNumber != null ">comment_number,</if>
+            <if test="newsPicture != null  and newsPicture != ''">news_picture,</if>
+            <if test="param1 != null  and param1 != ''">param1,</if>
+            <if test="param2 != null  and param2 != ''">param2,</if>
+            <if test="param3 != null  and param3 != ''">param3,</if>
+            <if test="param4 != null  and param4 != ''">param4,</if>
+            <if test="param5 != null  and param5 != ''">param5,</if>
+            <if test="param6 != null  and param6 != ''">param6,</if>
+            <if test="param7 != null  and param7 != ''">param7,</if>
+            <if test="param8 != null  and param8 != ''">param8,</if>
+            <if test="param9 != null  and param9 != ''">param9,</if>
+            <if test="param10 != null  and param10 != ''">param10,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="newsTitle != null  and newsTitle != ''">#{newsTitle},</if>
+            <if test="newsType != null  and newsType != ''">#{newsType},</if>
+            <if test="newsSeq != null ">#{newsSeq},</if>
+            <if test="newsBody != null  and newsBody != ''">#{newsBody},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="deleteTime != null ">#{deleteTime},</if>
+            <if test="createUser != null  and createUser != ''">#{createUser},</if>
+            <if test="updateUser != null  and updateUser != ''">#{updateUser},</if>
+            <if test="deleteUser != null  and deleteUser != ''">#{deleteUser},</if>
+            <if test="isDelete != null  and isDelete != ''">#{isDelete},</if>
+            <if test="likeNumber != null ">#{likeNumber},</if>
+            <if test="viewNumber != null ">#{viewNumber},</if>
+            <if test="commentNumber != null ">#{commentNumber},</if>
+            <if test="newsPicture != null  and newsPicture != ''">#{newsPicture},</if>
+            <if test="param1 != null  and param1 != ''">#{param1},</if>
+            <if test="param2 != null  and param2 != ''">#{param2},</if>
+            <if test="param3 != null  and param3 != ''">#{param3},</if>
+            <if test="param4 != null  and param4 != ''">#{param4},</if>
+            <if test="param5 != null  and param5 != ''">#{param5},</if>
+            <if test="param6 != null  and param6 != ''">#{param6},</if>
+            <if test="param7 != null  and param7 != ''">#{param7},</if>
+            <if test="param8 != null  and param8 != ''">#{param8},</if>
+            <if test="param9 != null  and param9 != ''">#{param9},</if>
+            <if test="param10 != null  and param10 != ''">#{param10},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTNews" parameterType="TNews">
+        update t_news
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="newsTitle != null  and newsTitle != ''">news_title = #{newsTitle},</if>
+            <if test="newsType != null  and newsType != ''">news_type = #{newsType},</if>
+            <if test="newsSeq != null ">news_seq = #{newsSeq},</if>
+            <if test="newsBody != null  and newsBody != ''">news_body = #{newsBody},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="deleteTime != null ">delete_time = #{deleteTime},</if>
+            <if test="createUser != null  and createUser != ''">create_user = #{createUser},</if>
+            <if test="updateUser != null  and updateUser != ''">update_user = #{updateUser},</if>
+            <if test="deleteUser != null  and deleteUser != ''">delete_user = #{deleteUser},</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete = #{isDelete},</if>
+            <if test="likeNumber != null ">like_number = #{likeNumber},</if>
+            <if test="viewNumber != null ">view_number = #{viewNumber},</if>
+            <if test="commentNumber != null ">comment_number = #{commentNumber},</if>
+            <if test="newsPicture != null  and newsPicture != ''">news_picture = #{newsPicture},</if>
+            <if test="param1 != null  and param1 != ''">param1 = #{param1},</if>
+            <if test="param2 != null  and param2 != ''">param2 = #{param2},</if>
+            <if test="param3 != null  and param3 != ''">param3 = #{param3},</if>
+            <if test="param4 != null  and param4 != ''">param4 = #{param4},</if>
+            <if test="param5 != null  and param5 != ''">param5 = #{param5},</if>
+            <if test="param6 != null  and param6 != ''">param6 = #{param6},</if>
+            <if test="param7 != null  and param7 != ''">param7 = #{param7},</if>
+            <if test="param8 != null  and param8 != ''">param8 = #{param8},</if>
+            <if test="param9 != null  and param9 != ''">param9 = #{param9},</if>
+            <if test="param10 != null  and param10 != ''">param10 = #{param10},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTNewsById" parameterType="Long">
+        delete from t_news where id = #{id}
+    </delete>
+
+    <delete id="deleteTNewsByIds" parameterType="String">
+        delete from t_news where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

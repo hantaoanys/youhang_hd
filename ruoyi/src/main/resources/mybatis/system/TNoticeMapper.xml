@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.TNoticeMapper">
+    
+    <resultMap type="TNotice" id="TNoticeResult">
+        <result property="id"    column="id"    />
+        <result property="noticeName"    column="notice_name"    />
+        <result property="noticeDiscription"    column="notice_discription"    />
+        <result property="noticeSeq"    column="notice_seq"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="deleteTime"    column="delete_time"    />
+        <result property="isDeleted"    column="is_deleted"    />
+        <result property="createUser"    column="create_user"    />
+    </resultMap>
+
+    <sql id="selectTNoticeVo">
+        select id, notice_name, notice_discription, notice_seq, create_time, update_time, delete_time, is_deleted, create_user from t_notice
+    </sql>
+
+    <select id="selectTNoticeList" parameterType="TNotice" resultMap="TNoticeResult">
+        <include refid="selectTNoticeVo"/>
+        <where>  
+            <if test="noticeName != null  and noticeName != ''"> and notice_name like concat('%', #{noticeName}, '%')</if>
+            <if test="noticeDiscription != null  and noticeDiscription != ''"> and notice_discription = #{noticeDiscription}</if>
+            <if test="noticeSeq != null  and noticeSeq != ''"> and notice_seq = #{noticeSeq}</if>
+            <if test="deleteTime != null "> and delete_time = #{deleteTime}</if>
+            <if test="isDeleted != null  and isDeleted != ''"> and is_deleted = #{isDeleted}</if>
+            <if test="createUser != null  and createUser != ''"> and create_user = #{createUser}</if>
+        </where>
+        ORDER  by notice_seq
+    </select>
+    
+    <select id="selectTNoticeById" parameterType="Long" resultMap="TNoticeResult">
+        <include refid="selectTNoticeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTNotice" parameterType="TNotice">
+        insert into t_notice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="noticeName != null  and noticeName != ''">notice_name,</if>
+            <if test="noticeDiscription != null  and noticeDiscription != ''">notice_discription,</if>
+            <if test="noticeSeq != null  and noticeSeq != ''">notice_seq,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="deleteTime != null ">delete_time,</if>
+            <if test="isDeleted != null  and isDeleted != ''">is_deleted,</if>
+            <if test="createUser != null  and createUser != ''">create_user,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="noticeName != null  and noticeName != ''">#{noticeName},</if>
+            <if test="noticeDiscription != null  and noticeDiscription != ''">#{noticeDiscription},</if>
+            <if test="noticeSeq != null  and noticeSeq != ''">#{noticeSeq},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="deleteTime != null ">#{deleteTime},</if>
+            <if test="isDeleted != null  and isDeleted != ''">#{isDeleted},</if>
+            <if test="createUser != null  and createUser != ''">#{createUser},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTNotice" parameterType="TNotice">
+        update t_notice
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="noticeName != null  and noticeName != ''">notice_name = #{noticeName},</if>
+            <if test="noticeDiscription != null  and noticeDiscription != ''">notice_discription = #{noticeDiscription},</if>
+            <if test="noticeSeq != null  and noticeSeq != ''">notice_seq = #{noticeSeq},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="deleteTime != null ">delete_time = #{deleteTime},</if>
+            <if test="isDeleted != null  and isDeleted != ''">is_deleted = #{isDeleted},</if>
+            <if test="createUser != null  and createUser != ''">create_user = #{createUser},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTNoticeById" parameterType="Long">
+        delete from t_notice where id = #{id}
+    </delete>
+
+    <delete id="deleteTNoticeByIds" parameterType="String">
+        delete from t_notice where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

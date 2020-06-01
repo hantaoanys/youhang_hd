@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.TNewsLikeMapper">
+    
+    <resultMap type="TNewsLike" id="TNewsLikeResult">
+        <result property="id"    column="id"    />
+        <result property="newsId"    column="news_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="userNickName"    column="user_nick_name"    />
+        <result property="isLike"    column="is_like"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="deleteTime"    column="delete_time"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="updateUser"    column="update_user"    />
+        <result property="deleteUser"    column="delete_user"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="param1"    column="param1"    />
+        <result property="param2"    column="param2"    />
+    </resultMap>
+
+    <sql id="selectTNewsLikeVo">
+        select id, news_id, user_id, user_name, user_nick_name, is_like, create_time, update_time, delete_time, create_user, update_user, delete_user, is_delete, param1, param2 from t_news_like
+    </sql>
+
+    <select id="selectTNewsLikeList" parameterType="TNewsLike" resultMap="TNewsLikeResult">
+        <include refid="selectTNewsLikeVo"/>
+        <where>  
+            <if test="newsId != null "> and news_id = #{newsId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="userNickName != null  and userNickName != ''"> and user_nick_name like concat('%', #{userNickName}, '%')</if>
+            <if test="isLike != null  and isLike != ''"> and is_like = #{isLike}</if>
+            <if test="deleteTime != null "> and delete_time = #{deleteTime}</if>
+            <if test="createUser != null  and createUser != ''"> and create_user = #{createUser}</if>
+            <if test="updateUser != null  and updateUser != ''"> and update_user = #{updateUser}</if>
+            <if test="deleteUser != null  and deleteUser != ''"> and delete_user = #{deleteUser}</if>
+            <if test="isDelete != null  and isDelete != ''"> and is_delete = #{isDelete}</if>
+            <if test="param1 != null  and param1 != ''"> and param1 = #{param1}</if>
+            <if test="param2 != null  and param2 != ''"> and param2 = #{param2}</if>
+        </where>
+    </select>
+    
+    <select id="selectTNewsLikeById" parameterType="Long" resultMap="TNewsLikeResult">
+        <include refid="selectTNewsLikeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTNewsLike" parameterType="TNewsLike" useGeneratedKeys="true" keyProperty="id">
+        insert into t_news_like
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="newsId != null ">news_id,</if>
+            <if test="userId != null ">user_id,</if>
+            <if test="userName != null  and userName != ''">user_name,</if>
+            <if test="userNickName != null  and userNickName != ''">user_nick_name,</if>
+            <if test="isLike != null  and isLike != ''">is_like,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="deleteTime != null ">delete_time,</if>
+            <if test="createUser != null  and createUser != ''">create_user,</if>
+            <if test="updateUser != null  and updateUser != ''">update_user,</if>
+            <if test="deleteUser != null  and deleteUser != ''">delete_user,</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete,</if>
+            <if test="param1 != null  and param1 != ''">param1,</if>
+            <if test="param2 != null  and param2 != ''">param2,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="newsId != null ">#{newsId},</if>
+            <if test="userId != null ">#{userId},</if>
+            <if test="userName != null  and userName != ''">#{userName},</if>
+            <if test="userNickName != null  and userNickName != ''">#{userNickName},</if>
+            <if test="isLike != null  and isLike != ''">#{isLike},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="deleteTime != null ">#{deleteTime},</if>
+            <if test="createUser != null  and createUser != ''">#{createUser},</if>
+            <if test="updateUser != null  and updateUser != ''">#{updateUser},</if>
+            <if test="deleteUser != null  and deleteUser != ''">#{deleteUser},</if>
+            <if test="isDelete != null  and isDelete != ''">#{isDelete},</if>
+            <if test="param1 != null  and param1 != ''">#{param1},</if>
+            <if test="param2 != null  and param2 != ''">#{param2},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTNewsLike" parameterType="TNewsLike">
+        update t_news_like
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="newsId != null ">news_id = #{newsId},</if>
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="userName != null  and userName != ''">user_name = #{userName},</if>
+            <if test="userNickName != null  and userNickName != ''">user_nick_name = #{userNickName},</if>
+            <if test="isLike != null  and isLike != ''">is_like = #{isLike},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="deleteTime != null ">delete_time = #{deleteTime},</if>
+            <if test="createUser != null  and createUser != ''">create_user = #{createUser},</if>
+            <if test="updateUser != null  and updateUser != ''">update_user = #{updateUser},</if>
+            <if test="deleteUser != null  and deleteUser != ''">delete_user = #{deleteUser},</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete = #{isDelete},</if>
+            <if test="param1 != null  and param1 != ''">param1 = #{param1},</if>
+            <if test="param2 != null  and param2 != ''">param2 = #{param2},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTNewsLikeById" parameterType="Long">
+        delete from t_news_like where id = #{id}
+    </delete>
+
+    <delete id="deleteTNewsLikeByIds" parameterType="String">
+        delete from t_news_like where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

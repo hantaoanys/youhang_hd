@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.TPrivacyMapper">
+    
+    <resultMap type="TPrivacy" id="TPrivacyResult">
+        <result property="id"    column="id"    />
+        <result property="privacyName"    column="privacy_name"    />
+        <result property="title"    column="title"    />
+        <result property="body"    column="body"    />
+    </resultMap>
+
+    <sql id="selectTPrivacyVo">
+        select id, privacy_name, title, body from t_privacy
+    </sql>
+
+    <select id="selectTPrivacyList" parameterType="TPrivacy" resultMap="TPrivacyResult">
+        <include refid="selectTPrivacyVo"/>
+        <where>  
+            <if test="privacyName != null  and privacyName != ''"> and privacy_name like concat('%', #{privacyName}, '%')</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="body != null  and body != ''"> and body = #{body}</if>
+        </where>
+    </select>
+    
+    <select id="selectTPrivacyById" parameterType="Long" resultMap="TPrivacyResult">
+        <include refid="selectTPrivacyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTPrivacy" parameterType="TPrivacy" useGeneratedKeys="true" keyProperty="id">
+        insert into t_privacy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="privacyName != null  and privacyName != ''">privacy_name,</if>
+            <if test="title != null  and title != ''">title,</if>
+            <if test="body != null  and body != ''">body,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="privacyName != null  and privacyName != ''">#{privacyName},</if>
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="body != null  and body != ''">#{body},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTPrivacy" parameterType="TPrivacy">
+        update t_privacy
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="privacyName != null  and privacyName != ''">privacy_name = #{privacyName},</if>
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="body != null  and body != ''">body = #{body},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTPrivacyById" parameterType="Long">
+        delete from t_privacy where id = #{id}
+    </delete>
+
+    <delete id="deleteTPrivacyByIds" parameterType="String">
+        delete from t_privacy where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

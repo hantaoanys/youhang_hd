@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.TUserOrderMapper">
+    
+    <resultMap type="TUserOrder" id="TUserOrderResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="goodName"    column="good_name"    />
+        <result property="goodPath"    column="good_path"    />
+        <result property="goodId"    column="good_id"    />
+        <result property="goodType"    column="good_type"    />
+        <result property="payMoney"    column="pay_money"    />
+        <result property="serviceProcess"    column="service_process"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectTUserOrderVo">
+        select id, user_id, good_name, good_path, good_id, good_type, pay_money, service_process, del_flag, create_by, create_time, update_by, update_time, remark from t_user_order
+    </sql>
+
+    <select id="selectTUserOrderList" parameterType="TUserOrder" resultMap="TUserOrderResult">
+        <include refid="selectTUserOrderVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="goodName != null  and goodName != ''"> and good_name like concat('%', #{goodName}, '%')</if>
+            <if test="goodPath != null  and goodPath != ''"> and good_path = #{goodPath}</if>
+            <if test="goodId != null "> and good_id = #{goodId}</if>
+            <if test="goodType != null "> and good_type = #{goodType}</if>
+            <if test="payMoney != null "> and pay_money = #{payMoney}</if>
+            <if test="serviceProcess != null  and serviceProcess != ''"> and service_process = #{serviceProcess}</if>
+        </where>
+    </select>
+    
+    <select id="selectTUserOrderById" parameterType="Long" resultMap="TUserOrderResult">
+        <include refid="selectTUserOrderVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTUserOrder" parameterType="TUserOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into t_user_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null ">user_id,</if>
+            <if test="goodName != null  and goodName != ''">good_name,</if>
+            <if test="goodPath != null  and goodPath != ''">good_path,</if>
+            <if test="goodId != null ">good_id,</if>
+            <if test="goodType != null ">good_type,</if>
+            <if test="payMoney != null ">pay_money,</if>
+            <if test="serviceProcess != null  and serviceProcess != ''">service_process,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null ">#{userId},</if>
+            <if test="goodName != null  and goodName != ''">#{goodName},</if>
+            <if test="goodPath != null  and goodPath != ''">#{goodPath},</if>
+            <if test="goodId != null ">#{goodId},</if>
+            <if test="goodType != null ">#{goodType},</if>
+            <if test="payMoney != null ">#{payMoney},</if>
+            <if test="serviceProcess != null  and serviceProcess != ''">#{serviceProcess},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTUserOrder" parameterType="TUserOrder">
+        update t_user_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="goodName != null  and goodName != ''">good_name = #{goodName},</if>
+            <if test="goodPath != null  and goodPath != ''">good_path = #{goodPath},</if>
+            <if test="goodId != null ">good_id = #{goodId},</if>
+            <if test="goodType != null ">good_type = #{goodType},</if>
+            <if test="payMoney != null ">pay_money = #{payMoney},</if>
+            <if test="serviceProcess != null  and serviceProcess != ''">service_process = #{serviceProcess},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTUserOrderById" parameterType="Long">
+        delete from t_user_order where id = #{id}
+    </delete>
+
+    <delete id="deleteTUserOrderByIds" parameterType="String">
+        delete from t_user_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.TGoodsMapper">
+    
+    <resultMap type="TGoods" id="TGoodsResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="sketch"    column="sketch"    />
+        <result property="keywords"    column="keywords"    />
+        <result property="seq"    column="seq"    />
+        <result property="picture"    column="picture"    />
+        <result property="view"    column="view"    />
+        <result property="matchPoint"    column="match_point"    />
+        <result property="price"    column="price"    />
+        <result property="marketPrice"    column="market_price"    />
+        <result property="stock"    column="stock"    />
+        <result property="sales"    column="sales"    />
+        <result property="merchantId"    column="merchant_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="deleteTime"    column="delete_time"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="updateUser"    column="update_user"    />
+        <result property="deleteUser"    column="delete_user"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="merchant"    column="merchant"    />
+        <result property="commissionrate"    column="commissionRate"    />
+        <result property="invitemoney"    column="inviteMoney"    />
+        <result property="param1"    column="param1"    />
+        <result property="param2"    column="param2"    />
+    </resultMap>
+
+    <sql id="selectTGoodsVo">
+        select id, name, sketch, keywords, seq, picture, view, match_point, price, market_price, stock, sales, merchant_id, create_time, update_time, delete_time, create_user, update_user, delete_user, is_delete, merchant, commissionRate, inviteMoney, param1, param2 from t_goods
+    </sql>
+
+    <select id="selectTGoodsList" parameterType="TGoods" resultMap="TGoodsResult">
+        <include refid="selectTGoodsVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="sketch != null  and sketch != ''"> and sketch = #{sketch}</if>
+            <if test="keywords != null  and keywords != ''"> and keywords = #{keywords}</if>
+            <if test="seq != null "> and seq = #{seq}</if>
+            <if test="picture != null  and picture != ''"> and picture = #{picture}</if>
+            <if test="view != null "> and view = #{view}</if>
+            <if test="matchPoint != null "> and match_point = #{matchPoint}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="marketPrice != null "> and market_price = #{marketPrice}</if>
+            <if test="stock != null "> and stock = #{stock}</if>
+            <if test="sales != null "> and sales = #{sales}</if>
+            <if test="merchantId != null  and merchantId != ''"> and merchant_id = #{merchantId}</if>
+            <if test="deleteTime != null "> and delete_time = #{deleteTime}</if>
+            <if test="createUser != null  and createUser != ''"> and create_user = #{createUser}</if>
+            <if test="updateUser != null  and updateUser != ''"> and update_user = #{updateUser}</if>
+            <if test="deleteUser != null  and deleteUser != ''"> and delete_user = #{deleteUser}</if>
+            <if test="isDelete != null  and isDelete != ''"> and is_delete = #{isDelete}</if>
+            <if test="merchant != null  and merchant != ''"> and merchant = #{merchant}</if>
+            <if test="commissionrate != null  and commissionrate != ''"> and commissionRate = #{commissionrate}</if>
+            <if test="invitemoney != null "> and inviteMoney = #{invitemoney}</if>
+            <if test="param1 != null  and param1 != ''"> and param1 = #{param1}</if>
+            <if test="param2 != null  and param2 != ''"> and param2 = #{param2}</if>
+        </where>
+    </select>
+    
+    <select id="selectTGoodsById" parameterType="Long" resultMap="TGoodsResult">
+        <include refid="selectTGoodsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTGoods" parameterType="TGoods" useGeneratedKeys="true" keyProperty="id">
+        insert into t_goods
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">name,</if>
+            <if test="sketch != null  and sketch != ''">sketch,</if>
+            <if test="keywords != null  and keywords != ''">keywords,</if>
+            <if test="seq != null ">seq,</if>
+            <if test="picture != null  and picture != ''">picture,</if>
+            <if test="view != null ">view,</if>
+            <if test="matchPoint != null ">match_point,</if>
+            <if test="price != null ">price,</if>
+            <if test="marketPrice != null ">market_price,</if>
+            <if test="stock != null ">stock,</if>
+            <if test="sales != null ">sales,</if>
+            <if test="merchantId != null  and merchantId != ''">merchant_id,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="deleteTime != null ">delete_time,</if>
+            <if test="createUser != null  and createUser != ''">create_user,</if>
+            <if test="updateUser != null  and updateUser != ''">update_user,</if>
+            <if test="deleteUser != null  and deleteUser != ''">delete_user,</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete,</if>
+            <if test="merchant != null  and merchant != ''">merchant,</if>
+            <if test="commissionrate != null  and commissionrate != ''">commissionRate,</if>
+            <if test="invitemoney != null ">inviteMoney,</if>
+            <if test="param1 != null  and param1 != ''">param1,</if>
+            <if test="param2 != null  and param2 != ''">param2,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="sketch != null  and sketch != ''">#{sketch},</if>
+            <if test="keywords != null  and keywords != ''">#{keywords},</if>
+            <if test="seq != null ">#{seq},</if>
+            <if test="picture != null  and picture != ''">#{picture},</if>
+            <if test="view != null ">#{view},</if>
+            <if test="matchPoint != null ">#{matchPoint},</if>
+            <if test="price != null ">#{price},</if>
+            <if test="marketPrice != null ">#{marketPrice},</if>
+            <if test="stock != null ">#{stock},</if>
+            <if test="sales != null ">#{sales},</if>
+            <if test="merchantId != null  and merchantId != ''">#{merchantId},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="deleteTime != null ">#{deleteTime},</if>
+            <if test="createUser != null  and createUser != ''">#{createUser},</if>
+            <if test="updateUser != null  and updateUser != ''">#{updateUser},</if>
+            <if test="deleteUser != null  and deleteUser != ''">#{deleteUser},</if>
+            <if test="isDelete != null  and isDelete != ''">#{isDelete},</if>
+            <if test="merchant != null  and merchant != ''">#{merchant},</if>
+            <if test="commissionrate != null  and commissionrate != ''">#{commissionrate},</if>
+            <if test="invitemoney != null ">#{invitemoney},</if>
+            <if test="param1 != null  and param1 != ''">#{param1},</if>
+            <if test="param2 != null  and param2 != ''">#{param2},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTGoods" parameterType="TGoods">
+        update t_goods
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="sketch != null  and sketch != ''">sketch = #{sketch},</if>
+            <if test="keywords != null  and keywords != ''">keywords = #{keywords},</if>
+            <if test="seq != null ">seq = #{seq},</if>
+            <if test="picture != null  and picture != ''">picture = #{picture},</if>
+            <if test="view != null ">view = #{view},</if>
+            <if test="matchPoint != null ">match_point = #{matchPoint},</if>
+            <if test="price != null ">price = #{price},</if>
+            <if test="marketPrice != null ">market_price = #{marketPrice},</if>
+            <if test="stock != null ">stock = #{stock},</if>
+            <if test="sales != null ">sales = #{sales},</if>
+            <if test="merchantId != null  and merchantId != ''">merchant_id = #{merchantId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="deleteTime != null ">delete_time = #{deleteTime},</if>
+            <if test="createUser != null  and createUser != ''">create_user = #{createUser},</if>
+            <if test="updateUser != null  and updateUser != ''">update_user = #{updateUser},</if>
+            <if test="deleteUser != null  and deleteUser != ''">delete_user = #{deleteUser},</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete = #{isDelete},</if>
+            <if test="merchant != null  and merchant != ''">merchant = #{merchant},</if>
+            <if test="commissionrate != null  and commissionrate != ''">commissionRate = #{commissionrate},</if>
+            <if test="invitemoney != null ">inviteMoney = #{invitemoney},</if>
+            <if test="param1 != null  and param1 != ''">param1 = #{param1},</if>
+            <if test="param2 != null  and param2 != ''">param2 = #{param2},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTGoodsById" parameterType="Long">
+        delete from t_goods where id = #{id}
+    </delete>
+
+    <delete id="deleteTGoodsByIds" parameterType="String">
+        delete from t_goods where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
