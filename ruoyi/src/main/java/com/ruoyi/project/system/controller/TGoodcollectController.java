@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
-import com.ruoyi.project.system.domain.TNewsCollect;
-import com.ruoyi.project.system.service.ITNewsCollectService;
+import com.ruoyi.project.system.domain.TGoodcollect;
+import com.ruoyi.project.system.service.ITGoodcollectService;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
@@ -29,38 +29,39 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 新闻收藏Controller
+ * 商品收藏Controller
  * 
  * @author ruoyi
- * @date 2020-05-23
+ * @date 2020-06-06
  */
 @RestController
-@RequestMapping("/system/collect")
-public class TNewsCollectController extends BaseController
+@RequestMapping("/system/goodcollect")
+public class TGoodcollectController extends BaseController
 {
     @Autowired
-    private ITNewsCollectService tNewsCollectService;
+    private ITGoodcollectService tGoodcollectService;
     @Autowired
     private ITAppUserService tAppUserService;
 
     @Autowired
     private RedisCache redisCache;
+
     /**
-     * 查询新闻收藏列表
+     * 查询商品收藏列表
      */
     @GetMapping("/list")
-    public TableDataInfo list(TNewsCollect tNewsCollect)
+    public TableDataInfo list(TGoodcollect tGoodcollect)
     {
         startPage();
-        List<TNewsCollect> list = tNewsCollectService.selectTNewsCollectList(tNewsCollect);
+        List<TGoodcollect> list = tGoodcollectService.selectTGoodcollectList(tGoodcollect);
         return getDataTable(list);
     }
 
     /**
-     * 查询新闻收藏列表APP
+     * APP查询商品收藏列表
      */
     @GetMapping("/app/list")
-    public Object appList(TNewsCollect tNewsCollect,HttpServletRequest request)
+    public Object appList(TGoodcollect tGoodcollect, HttpServletRequest request)
     {
         JSONObject ret = new JSONObject();
         String token = request.getHeader("token");
@@ -77,43 +78,40 @@ public class TNewsCollectController extends BaseController
                 ret.put("msg","请先登录");
                 return ret;
             }else {
-                tNewsCollect.setUserId(userId);
+                tGoodcollect.setUserId(userId.toString());
             }
         }
         startPage();
-        List<TNewsCollect> list = tNewsCollectService.selectTNewsCollectList(tNewsCollect);
+        List<TGoodcollect> list = tGoodcollectService.selectTGoodcollectList(tGoodcollect);
         return getDataTable(list);
     }
 
-
-
     /**
-     * 导出新闻收藏列表
+     * 导出商品收藏列表
      */
-    @Log(title = "新闻收藏", businessType = BusinessType.EXPORT)
+    @Log(title = "商品收藏", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(TNewsCollect tNewsCollect)
+    public AjaxResult export(TGoodcollect tGoodcollect)
     {
-        List<TNewsCollect> list = tNewsCollectService.selectTNewsCollectList(tNewsCollect);
-        ExcelUtil<TNewsCollect> util = new ExcelUtil<TNewsCollect>(TNewsCollect.class);
-        return util.exportExcel(list, "collect");
+        List<TGoodcollect> list = tGoodcollectService.selectTGoodcollectList(tGoodcollect);
+        ExcelUtil<TGoodcollect> util = new ExcelUtil<TGoodcollect>(TGoodcollect.class);
+        return util.exportExcel(list, "goodcollect");
     }
 
     /**
-     * 获取新闻收藏详细信息
+     * 获取商品收藏详细信息
      */
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return AjaxResult.success(tNewsCollectService.selectTNewsCollectById(id));
+        return AjaxResult.success(tGoodcollectService.selectTGoodcollectById(id));
     }
 
     /**
-     * 新增新闻收藏
+     * 新增APP收藏
      */
-    @Log(title = "新闻收藏", businessType = BusinessType.INSERT)
     @PostMapping("/app")
-    public Object addApp(@RequestBody TNewsCollect tNewsCollect, HttpServletRequest request)
+    public Object addApp(@RequestBody TGoodcollect tGoodcollect, HttpServletRequest request)
     {
         JSONObject ret = new JSONObject();
         String token = request.getHeader("token");
@@ -130,51 +128,55 @@ public class TNewsCollectController extends BaseController
                 ret.put("msg","请先登录");
                 return ret;
             }else {
-                TNewsCollect temp = new TNewsCollect();
-                temp.setUserId(userId);
-                temp.setNewsId(tNewsCollect.getNewsId());
-                List<TNewsCollect> tNewsCollects = tNewsCollectService.selectTNewsCollectList(temp);
-                if (null!=tNewsCollects && tNewsCollects.size()>0){
-                    tNewsCollectService.deleteTNewsCollectById(tNewsCollects.get(0).getId());
+                TGoodcollect temp = new TGoodcollect();
+                temp.setUserId(userId.toString());
+                temp.setGoodId(tGoodcollect.getGoodId());
+                List<TGoodcollect> tGoodcollects = tGoodcollectService.selectTGoodcollectList(temp);
+                if (null!=tGoodcollects && tGoodcollects.size()>0){
+                    tGoodcollectService.deleteTGoodcollectById(tGoodcollects.get(0).getId());
                     ret.put("msg","取消收藏");
                     return ret;
                 }
-                tNewsCollect.setCreateUser(appUser.getNickName());
-                tNewsCollect.setCreateTime(new Date());
-                tNewsCollect.setUserId(userId);
-                tNewsCollectService.insertTNewsCollect(tNewsCollect);
+                tGoodcollect.setPhone(appUser.getPhonenumber());
+                tGoodcollect.setCreateUser(appUser.getNickName());
+                tGoodcollect.setCreateTime(new Date());
+                tGoodcollect.setUserId(userId.toString());
+                tGoodcollectService.insertTGoodcollect(tGoodcollect);
                 ret.put("msg","收藏成功");
             }
         }
         return ret;
     }
 
+
+
     /**
-     * 新增新闻收藏
+     * 新增商品收藏
      */
-    @Log(title = "新闻收藏", businessType = BusinessType.INSERT)
+    @Log(title = "商品收藏", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody TNewsCollect tNewsCollect)
+    public AjaxResult add(@RequestBody TGoodcollect tGoodcollect)
     {
-        return toAjax(tNewsCollectService.insertTNewsCollect(tNewsCollect));
-    }
-    /**
-     * 修改新闻收藏
-     */
-    @Log(title = "新闻收藏", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody TNewsCollect tNewsCollect)
-    {
-        return toAjax(tNewsCollectService.updateTNewsCollect(tNewsCollect));
+        return toAjax(tGoodcollectService.insertTGoodcollect(tGoodcollect));
     }
 
     /**
-     * 删除新闻收藏
+     * 修改商品收藏
      */
-    @Log(title = "新闻收藏", businessType = BusinessType.DELETE)
+    @Log(title = "商品收藏", businessType = BusinessType.UPDATE)
+    @PutMapping
+    public AjaxResult edit(@RequestBody TGoodcollect tGoodcollect)
+    {
+        return toAjax(tGoodcollectService.updateTGoodcollect(tGoodcollect));
+    }
+
+    /**
+     * 删除商品收藏
+     */
+    @Log(title = "商品收藏", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
-        return toAjax(tNewsCollectService.deleteTNewsCollectByIds(ids));
+        return toAjax(tGoodcollectService.deleteTGoodcollectByIds(ids));
     }
 }

@@ -17,6 +17,7 @@ public class TGoods extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
+    public  int collectNumber;
     /** id */
     private Long id;
 
@@ -315,6 +316,14 @@ public class TGoods extends BaseEntity
     public String getParam2() 
     {
         return param2;
+    }
+
+    public int getCollectNumber() {
+        return collectNumber;
+    }
+
+    public void setCollectNumber(int collectNumber) {
+        this.collectNumber = collectNumber;
     }
 
     @Override

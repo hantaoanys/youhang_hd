@@ -2,6 +2,8 @@ package com.ruoyi.project.system.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.project.system.domain.TGoodcollect;
+import com.ruoyi.project.system.mapper.TGoodcollectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.system.mapper.TGoodsMapper;
@@ -20,6 +22,9 @@ public class TGoodsServiceImpl implements ITGoodsService
     @Autowired
     private TGoodsMapper tGoodsMapper;
 
+    @Autowired
+    private TGoodcollectMapper tGoodcollectMapper;
+
     /**
      * 查询商品
      * 
@@ -29,7 +34,16 @@ public class TGoodsServiceImpl implements ITGoodsService
     @Override
     public TGoods selectTGoodsById(Long id)
     {
-        return tGoodsMapper.selectTGoodsById(id);
+        TGoods tgood = tGoodsMapper.selectTGoodsById(id);
+        TGoodcollect tmep = new TGoodcollect();
+        tmep.setGoodId(id.toString());
+        List<TGoodcollect> tGoodcollects = tGoodcollectMapper.selectTGoodcollectList(tmep);
+        if (null != tGoodcollects && tGoodcollects.size()>0){
+            tgood.setCollectNumber(tGoodcollects.size());
+        }else {
+            tgood.setCollectNumber(0);
+        }
+         return tgood;
     }
 
     /**
