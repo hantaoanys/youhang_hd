@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.TUserInviteHistoryMapper">
+    
+    <resultMap type="TUserInviteHistory" id="TUserInviteHistoryResult">
+        <result property="userId"    column="user_id"    />
+        <result property="phone"    column="phone"    />
+        <result property="money"    column="money"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectTUserInviteHistoryVo">
+        select user_id, phone, money, status, del_flag, create_by, create_time, update_by, update_time, remark from t_user_invite_history
+    </sql>
+
+    <select id="selectTUserInviteHistoryList" parameterType="TUserInviteHistory" resultMap="TUserInviteHistoryResult">
+        <include refid="selectTUserInviteHistoryVo"/>
+        <where>  
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="money != null "> and money = #{money}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectTUserInviteHistoryById" parameterType="Long" resultMap="TUserInviteHistoryResult">
+        <include refid="selectTUserInviteHistoryVo"/>
+        where user_id = #{userId}
+    </select>
+        
+    <insert id="insertTUserInviteHistory" parameterType="TUserInviteHistory" useGeneratedKeys="true" keyProperty="userId">
+        insert into t_user_invite_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="phone != null  and phone != ''">phone,</if>
+            <if test="money != null ">money,</if>
+            <if test="status != null ">status,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="phone != null  and phone != ''">#{phone},</if>
+            <if test="money != null ">#{money},</if>
+            <if test="status != null ">#{status},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTUserInviteHistory" parameterType="TUserInviteHistory">
+        update t_user_invite_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="phone != null  and phone != ''">phone = #{phone},</if>
+            <if test="money != null ">money = #{money},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+    <delete id="deleteTUserInviteHistoryById" parameterType="Long">
+        delete from t_user_invite_history where user_id = #{userId}
+    </delete>
+
+    <delete id="deleteTUserInviteHistoryByIds" parameterType="String">
+        delete from t_user_invite_history where user_id in 
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+    
+</mapper>

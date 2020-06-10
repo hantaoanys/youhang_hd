@@ -1,6 +1,13 @@
 package com.ruoyi.project.system.controller;
 
+import java.util.Date;
 import java.util.List;
+
+import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.framework.redis.RedisCache;
+import com.ruoyi.project.system.domain.TAppUser;
+import com.ruoyi.project.system.service.ITAppUserService;
+import com.ruoyi.project.tool.gen.util.InviteCodeUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +27,8 @@ import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 用户邀请商Controller
  * 
@@ -33,10 +42,15 @@ public class TUserInviteController extends BaseController
     @Autowired
     private ITUserInviteService tUserInviteService;
 
+    @Autowired
+    private ITAppUserService tAppUserService;
+
+    @Autowired
+    private RedisCache redisCache;
+
     /**
      * 查询用户邀请商列表
      */
-    @PreAuthorize("@ss.hasPermi('system:invite:list')")
     @GetMapping("/list")
     public TableDataInfo list(TUserInvite tUserInvite)
     {
@@ -48,7 +62,6 @@ public class TUserInviteController extends BaseController
     /**
      * 导出用户邀请商列表
      */
-    @PreAuthorize("@ss.hasPermi('system:invite:export')")
     @Log(title = "用户邀请商", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(TUserInvite tUserInvite)
@@ -59,9 +72,51 @@ public class TUserInviteController extends BaseController
     }
 
     /**
-     * 获取用户邀请商详细信息
+     * 获取用户邀请码，金额等
      */
-    @PreAuthorize("@ss.hasPermi('system:invite:query')")
+    @GetMapping(value = "/app")
+    public Object getAppInfo( HttpServletRequest request)
+    {
+        JSONObject ret = new JSONObject();
+        String token = request.getHeader("token");
+        Boolean uflag = true;
+        if(null == token || "".equals(token)) {
+            uflag = false;
+            ret.put("msg","请先登录");
+            return ret;
+        }else {
+            Long userId = redisCache.getCacheObject( request.getHeader("token"));
+            //校验用户id是否存在
+            TAppUser appUser = tAppUserService.selectTAppUserById(userId);
+            if (null == appUser || null == appUser.getUserId()){
+                ret.put("msg","请先登录");
+                return ret;
+            }else {
+                TUserInvite tUserInvite = tUserInviteService.selectTUserInviteById(userId);
+                if (null == tUserInvite || null == tUserInvite.getUserId()){
+                    TUserInvite newInvite = new TUserInvite();
+                    newInvite.setUserId(userId);
+                    newInvite.setInviteNumberTotal(0L);
+                    newInvite.setInviteMoneyTotal(0L);
+                    newInvite.setInviteMoneyNot(0L);
+                    newInvite.setInviteMoneyAlready(0L);
+                    newInvite.setInviteCode(InviteCodeUtils.toSerialCode(userId));
+                    newInvite.setCreateTime(new Date());
+                    newInvite.setCanInvite(false);
+                    tUserInviteService.insertTUserInvite(newInvite);
+                    return  newInvite;
+                }else {
+                    /** TODO 判断是否有提现中 或失败状态的 不能继续提现*/
+                    return tUserInvite;
+                }
+            }
+        }
+//        return AjaxResult.success(tUserInviteService.selectTUserInviteById(userId));
+    }
+
+    /**
+     * 获取用户邀请
+     */
     @GetMapping(value = "/{userId}")
     public AjaxResult getInfo(@PathVariable("userId") Long userId)
     {
@@ -71,7 +126,6 @@ public class TUserInviteController extends BaseController
     /**
      * 新增用户邀请商
      */
-    @PreAuthorize("@ss.hasPermi('system:invite:add')")
     @Log(title = "用户邀请商", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TUserInvite tUserInvite)
@@ -82,7 +136,6 @@ public class TUserInviteController extends BaseController
     /**
      * 修改用户邀请商
      */
-    @PreAuthorize("@ss.hasPermi('system:invite:edit')")
     @Log(title = "用户邀请商", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TUserInvite tUserInvite)
@@ -93,7 +146,6 @@ public class TUserInviteController extends BaseController
     /**
      * 删除用户邀请商
      */
-    @PreAuthorize("@ss.hasPermi('system:invite:remove')")
     @Log(title = "用户邀请商", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{userIds}")
     public AjaxResult remove(@PathVariable Long[] userIds)

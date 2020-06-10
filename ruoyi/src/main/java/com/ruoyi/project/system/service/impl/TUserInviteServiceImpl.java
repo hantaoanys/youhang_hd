@@ -11,10 +11,10 @@ import com.ruoyi.project.system.domain.TUserInvite;
 import com.ruoyi.project.system.service.ITUserInviteService;
 
 /**
- * 用户邀请商Service业务层处理
+ * 用户邀请Service业务层处理
  * 
  * @author ruoyi
- * @date 2020-05-10
+ * @date 2020-06-10
  */
 @Service
 public class TUserInviteServiceImpl implements ITUserInviteService 
@@ -23,10 +23,10 @@ public class TUserInviteServiceImpl implements ITUserInviteService
     private TUserInviteMapper tUserInviteMapper;
 
     /**
-     * 查询用户邀请商
+     * 查询用户邀请
      * 
-     * @param userId 用户邀请商ID
-     * @return 用户邀请商
+     * @param userId 用户邀请ID
+     * @return 用户邀请
      */
     @Override
     public TUserInvite selectTUserInviteById(Long userId)
@@ -35,10 +35,10 @@ public class TUserInviteServiceImpl implements ITUserInviteService
     }
 
     /**
-     * 查询用户邀请商列表
+     * 查询用户邀请列表
      * 
-     * @param tUserInvite 用户邀请商
-     * @return 用户邀请商
+     * @param tUserInvite 用户邀请
+     * @return 用户邀请
      */
     @Override
     public List<TUserInvite> selectTUserInviteList(TUserInvite tUserInvite)
@@ -47,9 +47,9 @@ public class TUserInviteServiceImpl implements ITUserInviteService
     }
 
     /**
-     * 新增用户邀请商
+     * 新增用户邀请
      * 
-     * @param tUserInvite 用户邀请商
+     * @param tUserInvite 用户邀请
      * @return 结果
      */
     @Override
@@ -60,9 +60,9 @@ public class TUserInviteServiceImpl implements ITUserInviteService
     }
 
     /**
-     * 修改用户邀请商
+     * 修改用户邀请
      * 
-     * @param tUserInvite 用户邀请商
+     * @param tUserInvite 用户邀请
      * @return 结果
      */
     @Override
@@ -73,9 +73,9 @@ public class TUserInviteServiceImpl implements ITUserInviteService
     }
 
     /**
-     * 批量删除用户邀请商
+     * 批量删除用户邀请
      * 
-     * @param userIds 需要删除的用户邀请商ID
+     * @param userIds 需要删除的用户邀请ID
      * @return 结果
      */
     @Override
@@ -85,9 +85,9 @@ public class TUserInviteServiceImpl implements ITUserInviteService
     }
 
     /**
-     * 删除用户邀请商信息
+     * 删除用户邀请信息
      * 
-     * @param userId 用户邀请商ID
+     * @param userId 用户邀请ID
      * @return 结果
      */
     @Override

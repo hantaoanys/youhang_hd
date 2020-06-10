@@ -278,12 +278,9 @@ public class SysLoginController {
             tAppUser.setNickName(tempName);
             tAppUserService.insertTAppUser(tAppUser);
             //更新邀请码信息
+            // 邀请码所属用户的 邀请人+1
             if (null != tUserInvite.getUserId()) {
-                tUserInvite.setInviteMoneyNot(tUserInvite.getInviteMoneyNot() + 10); //未体现金额
-                tUserInvite.setInviteMoneyTotal(tUserInvite.getInviteMoneyTotal() + 10); //总盈利金额
-//                tUserInvite.setInviteNumberMoney(); //已经提现的邀请人数
-                tUserInvite.setInviteNumberNotMoney(tUserInvite.getInviteNumberNotMoney() +1); //未体现人数
-                tUserInvite.setInviteNumberTotal(tUserInvite.getInviteNumberTotal() +1); //邀请的总金额
+                tUserInvite.setInviteNumberTotal(tUserInvite.getInviteMoneyTotal()+1);
                 tUserInviteService.updateTUserInvite(tUserInvite);
             }
             return ajax;

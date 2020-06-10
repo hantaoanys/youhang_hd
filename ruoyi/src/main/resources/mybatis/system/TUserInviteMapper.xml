@@ -6,13 +6,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="TUserInvite" id="TUserInviteResult">
         <result property="userId"    column="user_id"    />
+        <result property="phone"    column="phone"    />
         <result property="inviteCode"    column="invite_code"    />
         <result property="inviteNumberTotal"    column="invite_number_total"    />
-        <result property="inviteNumberNotMoney"    column="invite_number_not_money"    />
-        <result property="inviteNumberMoney"    column="invite_number_money"    />
         <result property="inviteMoneyTotal"    column="invite_money_total"    />
         <result property="inviteMoneyNot"    column="invite_money_not"    />
         <result property="inviteMoneyAlready"    column="invite_money_already"    />
+        <result property="zfbName"    column="zfb_name"    />
+        <result property="zfbAccount"    column="zfb_account"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
@@ -22,19 +23,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTUserInviteVo">
-        select user_id, invite_code, invite_number_total, invite_number_not_money, invite_number_money, invite_money_total, invite_money_not, invite_money_already, del_flag, create_by, create_time, update_by, update_time, remark from t_user_invite
+        select user_id, phone, invite_code, invite_number_total, invite_money_total, invite_money_not, invite_money_already, zfb_name, zfb_account, del_flag, create_by, create_time, update_by, update_time, remark from t_user_invite
     </sql>
 
     <select id="selectTUserInviteList" parameterType="TUserInvite" resultMap="TUserInviteResult">
         <include refid="selectTUserInviteVo"/>
         <where>  
-            <if test="inviteCode != null  and inviteCode != ''"> and invite_code = #{inviteCode}</if>
+            <if test="phone != null  and phone != ''"> and phone like concat('%', #{phone}, '%')</if>
+            <if test="inviteCode != null  and inviteCode != ''"> and invite_code like concat('%', #{inviteCode}, '%')</if>
             <if test="inviteNumberTotal != null "> and invite_number_total = #{inviteNumberTotal}</if>
-            <if test="inviteNumberNotMoney != null "> and invite_number_not_money = #{inviteNumberNotMoney}</if>
-            <if test="inviteNumberMoney != null "> and invite_number_money = #{inviteNumberMoney}</if>
             <if test="inviteMoneyTotal != null "> and invite_money_total = #{inviteMoneyTotal}</if>
             <if test="inviteMoneyNot != null "> and invite_money_not = #{inviteMoneyNot}</if>
             <if test="inviteMoneyAlready != null "> and invite_money_already = #{inviteMoneyAlready}</if>
+            <if test="zfbName != null  and zfbName != ''"> and zfb_name like concat('%', #{zfbName}, '%')</if>
+            <if test="zfbAccount != null  and zfbAccount != ''"> and zfb_account = #{zfbAccount}</if>
         </where>
     </select>
     
@@ -42,22 +44,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectTUserInviteVo"/>
         where user_id = #{userId}
     </select>
-    <select id="selectTUserInviteByInvoteCode" parameterType="map" resultMap="TUserInviteResult">
-        <include refid="selectTUserInviteVo"/>
-        where invite_code = #{inviteCode}
-    </select>
-
         
     <insert id="insertTUserInvite" parameterType="TUserInvite" useGeneratedKeys="true" keyProperty="userId">
         insert into t_user_invite
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="phone != null  and phone != ''">phone,</if>
             <if test="inviteCode != null  and inviteCode != ''">invite_code,</if>
             <if test="inviteNumberTotal != null ">invite_number_total,</if>
-            <if test="inviteNumberNotMoney != null ">invite_number_not_money,</if>
-            <if test="inviteNumberMoney != null ">invite_number_money,</if>
             <if test="inviteMoneyTotal != null ">invite_money_total,</if>
             <if test="inviteMoneyNot != null ">invite_money_not,</if>
             <if test="inviteMoneyAlready != null ">invite_money_already,</if>
+            <if test="zfbName != null  and zfbName != ''">zfb_name,</if>
+            <if test="zfbAccount != null  and zfbAccount != ''">zfb_account,</if>
             <if test="delFlag != null  and delFlag != ''">del_flag,</if>
             <if test="createBy != null  and createBy != ''">create_by,</if>
             <if test="createTime != null ">create_time,</if>
@@ -66,13 +64,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null  and remark != ''">remark,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="phone != null  and phone != ''">#{phone},</if>
             <if test="inviteCode != null  and inviteCode != ''">#{inviteCode},</if>
             <if test="inviteNumberTotal != null ">#{inviteNumberTotal},</if>
-            <if test="inviteNumberNotMoney != null ">#{inviteNumberNotMoney},</if>
-            <if test="inviteNumberMoney != null ">#{inviteNumberMoney},</if>
             <if test="inviteMoneyTotal != null ">#{inviteMoneyTotal},</if>
             <if test="inviteMoneyNot != null ">#{inviteMoneyNot},</if>
             <if test="inviteMoneyAlready != null ">#{inviteMoneyAlready},</if>
+            <if test="zfbName != null  and zfbName != ''">#{zfbName},</if>
+            <if test="zfbAccount != null  and zfbAccount != ''">#{zfbAccount},</if>
             <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
             <if test="createBy != null  and createBy != ''">#{createBy},</if>
             <if test="createTime != null ">#{createTime},</if>
@@ -85,13 +84,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateTUserInvite" parameterType="TUserInvite">
         update t_user_invite
         <trim prefix="SET" suffixOverrides=",">
+            <if test="phone != null  and phone != ''">phone = #{phone},</if>
             <if test="inviteCode != null  and inviteCode != ''">invite_code = #{inviteCode},</if>
             <if test="inviteNumberTotal != null ">invite_number_total = #{inviteNumberTotal},</if>
-            <if test="inviteNumberNotMoney != null ">invite_number_not_money = #{inviteNumberNotMoney},</if>
-            <if test="inviteNumberMoney != null ">invite_number_money = #{inviteNumberMoney},</if>
             <if test="inviteMoneyTotal != null ">invite_money_total = #{inviteMoneyTotal},</if>
             <if test="inviteMoneyNot != null ">invite_money_not = #{inviteMoneyNot},</if>
             <if test="inviteMoneyAlready != null ">invite_money_already = #{inviteMoneyAlready},</if>
+            <if test="zfbName != null  and zfbName != ''">zfb_name = #{zfbName},</if>
+            <if test="zfbAccount != null  and zfbAccount != ''">zfb_account = #{zfbAccount},</if>
             <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
             <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
@@ -112,5 +112,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{userId}
         </foreach>
     </delete>
-    
+
+    <select id="selectTUserInviteByInvoteCode" parameterType="map" resultMap="TUserInviteResult">
+        <include refid="selectTUserInviteVo"/>
+        where invite_code = #{inviteCode}
+    </select>
 </mapper>

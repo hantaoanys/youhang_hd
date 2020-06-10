@@ -10,7 +10,7 @@
 
 	<name>ruoyi</name>
 	<url>http://www.ruoyi.vip</url>
-	<description>若依管理系统</description>
+	<description>优航管理系统</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -249,6 +249,12 @@
 			<groupId>com.aliyun</groupId>
 			<artifactId>aliyun-java-sdk-core</artifactId>
 			<version>4.1.0</version>
+		</dependency>
+		<!-- alipay -->
+		<dependency>
+			<groupId>com.alipay.sdk</groupId>
+			<artifactId>alipay-sdk-java</artifactId>
+			<version>4.10.0.ALL</version>
 		</dependency>
 
 

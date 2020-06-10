@@ -37,8 +37,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectTGoodsList" parameterType="TGoods" resultMap="TGoodsResult">
-        <include refid="selectTGoodsVo"/>
-        <where>  
+        select id, name, sketch, keywords, seq, picture, view, match_point, price, market_price, stock, sales, merchant_id, create_time, update_time, delete_time, create_user, update_user, delete_user, is_delete, merchant, commissionRate, inviteMoney from t_goods
+
+        <where>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="sketch != null  and sketch != ''"> and sketch like concat(concat('%',#{sketch}),'%')</if>
             <if test="keywords != null  and keywords != ''"> and keywords = #{keywords}</if>
