@@ -6,7 +6,9 @@ import java.util.List;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.framework.redis.RedisCache;
 import com.ruoyi.project.system.domain.TAppUser;
+import com.ruoyi.project.system.domain.TUserInviteHistory;
 import com.ruoyi.project.system.service.ITAppUserService;
+import com.ruoyi.project.system.service.ITUserInviteHistoryService;
 import com.ruoyi.project.tool.gen.util.InviteCodeUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,10 @@ public class TUserInviteController extends BaseController
     @Autowired
     private RedisCache redisCache;
 
+    @Autowired
+    private ITUserInviteHistoryService tUserInviteHistoryService;
+
+
     /**
      * 查询用户邀请商列表
      */
@@ -72,7 +78,7 @@ public class TUserInviteController extends BaseController
     }
 
     /**
-     * 获取用户邀请码，金额等
+     * 获取用户邀请码，金额, 最近一次提现等
      */
     @GetMapping(value = "/app")
     public Object getAppInfo( HttpServletRequest request)
@@ -107,6 +113,23 @@ public class TUserInviteController extends BaseController
                     return  newInvite;
                 }else {
                     /** TODO 判断是否有提现中 或失败状态的 不能继续提现*/
+
+                    TUserInviteHistory history = new TUserInviteHistory();
+                    history.setUserId(userId);
+                    history.setStatus(1L); //审核状态 4.提现成功 3.审核失败 2:审核通过 1:提交申请
+                    List<TUserInviteHistory> list = tUserInviteHistoryService.selectTUserInviteHistoryList(history);
+                    if (null !=list && list.size()>0 ){
+                        tUserInvite.setCanInvite(false);
+                    }else {
+                        tUserInvite.setCanInvite(true);
+                    }
+
+                    TUserInviteHistory lastStatus = new TUserInviteHistory();
+                    lastStatus.setUserId(userId);
+                    List<TUserInviteHistory> last = tUserInviteHistoryService.selectTUserInviteHistoryList(lastStatus);
+                    if (last!=null && last.size()>0){
+                        tUserInvite.settUserInviteHistory(last.get(0));
+                    }
                     return tUserInvite;
                 }
             }
@@ -132,6 +155,36 @@ public class TUserInviteController extends BaseController
     {
         return toAjax(tUserInviteService.insertTUserInvite(tUserInvite));
     }
+
+
+    /**
+     * APP 修改用户邀请商
+     */
+    @Log(title = "用户邀请商", businessType = BusinessType.UPDATE)
+    @PostMapping("/APP")
+    public Object editApp(@RequestBody TUserInvite tUserInvite,HttpServletRequest request)
+    {
+        JSONObject ret = new JSONObject();
+        String token = request.getHeader("token");
+        Boolean uflag = true;
+        if(null == token || "".equals(token)) {
+            uflag = false;
+            ret.put("msg","请先登录");
+            return ret;
+        }else {
+            Long userId = redisCache.getCacheObject(request.getHeader("token"));
+            //校验用户id是否存在
+            TAppUser appUser = tAppUserService.selectTAppUserById(userId);
+            if (null == appUser || null == appUser.getUserId()) {
+                ret.put("msg", "请先登录");
+                return ret;
+            } else {
+                tUserInvite.setUserId(userId);
+            }
+        }
+        return toAjax(tUserInviteService.updateTUserInvite(tUserInvite));
+    }
+
 
     /**
      * 修改用户邀请商

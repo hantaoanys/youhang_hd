@@ -15,6 +15,8 @@ public class TUserInvite extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
+    private TUserInviteHistory tUserInviteHistory;
+
     private boolean canInvite;
     /** 用户ID */
     private Long userId;
@@ -151,6 +153,14 @@ public class TUserInvite extends BaseEntity
     public String getDelFlag()
     {
         return delFlag;
+    }
+
+    public TUserInviteHistory gettUserInviteHistory() {
+        return tUserInviteHistory;
+    }
+
+    public void settUserInviteHistory(TUserInviteHistory tUserInviteHistory) {
+        this.tUserInviteHistory = tUserInviteHistory;
     }
 
     @Override
