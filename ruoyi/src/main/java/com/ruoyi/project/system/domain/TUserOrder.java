@@ -22,6 +22,9 @@ public class TUserOrder extends BaseEntity
     @Excel(name = "用户ID")
     private Long userId;
 
+    /** 手机号 */
+    private String phone;
+
     /** 商品名称 */
     @Excel(name = "商品名称")
     private String goodName;
@@ -129,6 +132,14 @@ public class TUserOrder extends BaseEntity
     public String getDelFlag() 
     {
         return delFlag;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     @Override

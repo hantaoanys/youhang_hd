@@ -58,4 +58,6 @@ public interface TUserOrderMapper
      * @return 结果
      */
     public int deleteTUserOrderByIds(Long[] ids);
+
+    void updateOrderStatus(TUserOrder tUserOrder);
 }

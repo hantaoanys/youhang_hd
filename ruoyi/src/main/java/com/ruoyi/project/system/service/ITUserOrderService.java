@@ -58,4 +58,6 @@ public interface ITUserOrderService
      * @return 结果
      */
     public int deleteTUserOrderById(Long id);
+
+    void updateOrderStatus(TUserOrder tUserOrder);
 }

@@ -93,4 +93,9 @@ public class TUserOrderServiceImpl implements ITUserOrderService
     {
         return tUserOrderMapper.deleteTUserOrderById(id);
     }
+
+    @Override
+    public void updateOrderStatus(TUserOrder tUserOrder) {
+        tUserOrderMapper.updateOrderStatus(tUserOrder);
+    }
 }

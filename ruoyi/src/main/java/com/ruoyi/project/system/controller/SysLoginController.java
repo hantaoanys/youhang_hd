@@ -282,6 +282,7 @@ public class SysLoginController {
             if (null != tUserInvite.getUserId()) {
                 tUserInvite.setInviteNumberTotal(tUserInvite.getInviteMoneyTotal()+1);
                 tUserInviteService.updateTUserInvite(tUserInvite);
+
             }
             return ajax;
         }else {
