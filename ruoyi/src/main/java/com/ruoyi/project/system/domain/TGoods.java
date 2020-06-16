@@ -16,6 +16,7 @@ import com.ruoyi.framework.web.domain.BaseEntity;
 public class TGoods extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
+    public boolean isCollect;
 
     public  int collectNumber;
     /** id */
@@ -324,6 +325,14 @@ public class TGoods extends BaseEntity
 
     public void setCollectNumber(int collectNumber) {
         this.collectNumber = collectNumber;
+    }
+
+    public boolean isCollect() {
+        return isCollect;
+    }
+
+    public void setCollect(boolean collect) {
+        isCollect = collect;
     }
 
     @Override

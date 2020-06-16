@@ -2,6 +2,7 @@ package com.ruoyi.project.system.controller;
 
 import java.util.*;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
@@ -56,6 +57,34 @@ public class TUserOrderController extends BaseController
     private ITUserInviteService tUserInviteService;
     @Autowired
     private ITUserInvitegoodsService tUserInvitegoodsService;
+
+
+
+    /**APP用户获取我的订单，历史订单*/
+    @GetMapping("/app/list")
+    public Object AppList(TUserOrder tUserOrder, HttpServletRequest request){
+        JSONObject ret = new JSONObject();
+        String token = request.getHeader("token");
+        if(null == token || "".equals(token)) {
+            ret.put("msg","请先登录");
+            return ret;
+        }else {
+            Long userId = redisCache.getCacheObject( request.getHeader("token"));
+            //校验用户id是否存在
+            TAppUser appUser = tAppUserService.selectTAppUserById(userId);
+            if (null == appUser || null == appUser.getUserId()){
+                ret.put("msg","请先登录");
+                return ret;
+            }else {
+                tUserOrder.setUserId(userId);
+            }
+        }
+        startPage();
+        List<TUserOrder> list = tUserOrderService.selectTUserOrderList(tUserOrder);
+        return getDataTable(list);
+    }
+
+
     /**
      * 查询用户商品列表
      */
@@ -218,6 +247,31 @@ public class TUserOrderController extends BaseController
 
 
 
+    private static Map<String, String> convertRequestParamsToMap(HttpServletRequest request) {
+        Map<String, String> retMap = new HashMap<String, String>();
+
+        Set<Map.Entry<String, String[]>> entrySet = request.getParameterMap().entrySet();
+
+        for (Map.Entry<String, String[]> entry : entrySet) {
+            String name = entry.getKey();
+            String[] values = entry.getValue();
+            int valLen = values.length;
+
+            if (valLen == 1) {
+                retMap.put(name, values[0]);
+            } else if (valLen > 1) {
+                StringBuilder sb = new StringBuilder();
+                for (String val : values) {
+                    sb.append(",").append(val);
+                }
+                retMap.put(name, sb.toString().substring(1));
+            } else {
+                retMap.put(name, "");
+            }
+        }
+
+        return retMap;
+    }
     /**
      *
      * */
@@ -226,18 +280,28 @@ public class TUserOrderController extends BaseController
         //拿到账单id,更新账单支付状态，
         //2 找到userID,找到邀请人。 更新邀请人商品流水，邀请人总金额，带提现金额。
         logger.info("this is qiaoweisheng");
+
+        Map<String, String> params = convertRequestParamsToMap(request); // 将异步通知中收到的待验证所有参数都存放到map中
+        String paramsJson = JSON.toJSONString(params);
+        logger.info("支付宝回调，{}", paramsJson);
+
+
         Map<String,String[]> map = request.getParameterMap();
         Set<String> keys = map.keySet();
         for(String key : keys) {
             String[] value = map.get(key);
             System.out.println(key + " = " + value[0]);
         }
-        if (map.get("trade_status").toString().equals("TRADE_SUCCESS")){
+        logger.info("###########################");
+        logger.info(params.get("trade_status").toString());
+        logger.info(params.get("out_trade_no").toString());
+        logger.info("###########################");
+        if (params.get("trade_status").toString().equals("TRADE_SUCCESS")){
             logger.info("支付成功");
-            logger.info("账单id是"+map.get("out_trade_no").toString());
+            logger.info("账单id是"+params.get("out_trade_no").toString());
 
             //查找账单 更新账单
-           TUserOrder tUserOrder =  tUserOrderService.selectTUserOrderById(Long.valueOf(map.get("out_trade_no").toString()));
+           TUserOrder tUserOrder =  tUserOrderService.selectTUserOrderById(Long.valueOf(params.get("out_trade_no").toString()));
            tUserOrderService.updateOrderStatus(tUserOrder);
 
 
@@ -255,8 +319,10 @@ public class TUserOrderController extends BaseController
             if (null == good || null ==good.getId()){
                 return "success";
             }
-
-
+            //更新商品库存等
+            good.setStock(good.getStock()-1);
+            good.setSales(good.getSales()+1);
+            tGoodsService.updateTGoods(good);
             String inviteCode = appUser.getInviteCode();
             // 根据inviteCode 更新两个表 t_user_invitegoods 商品流水 t_user_invite邀请人总金额，代提现金额
 //            TUserInvite userInvite = new TUserInvite();

@@ -11,6 +11,11 @@ import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.MimeTypeUtils;
 import com.ruoyi.framework.config.RuoYiConfig;
 import com.ruoyi.framework.config.ServerConfig;
+import com.ruoyi.framework.redis.RedisCache;
+import com.ruoyi.project.system.domain.TAppUser;
+import com.ruoyi.project.system.domain.TGoodcollect;
+import com.ruoyi.project.system.service.ITAppUserService;
+import com.ruoyi.project.system.service.ITGoodcollectService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +36,8 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+
 import static com.ruoyi.common.utils.file.FileUploadUtils.assertAllowed;
 
 /**
@@ -48,6 +55,14 @@ public class TGoodsController extends BaseController
 
     @Autowired
     private ServerConfig serverConfig;
+
+    @Autowired
+    private ITAppUserService tAppUserService;
+
+    @Autowired
+    private RedisCache redisCache;
+    @Autowired
+    private ITGoodcollectService tGoodcollectService;
 
     @GetMapping("/list")
     public TableDataInfo list(TGoods tGoods)
@@ -71,6 +86,42 @@ public class TGoodsController extends BaseController
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
         return AjaxResult.success(tGoodsService.selectTGoodsById(id));
+    }
+
+    @GetMapping(value = "/app/{id}")
+    public AjaxResult getAppInfo(@PathVariable("id") Long id, HttpServletRequest request)
+    {
+
+        TGoods tGoods =  tGoodsService.selectTGoodsById(id);
+        String token = request.getHeader("token");
+        Boolean uflag = true;
+        if(null == token){
+            uflag =false;
+            tGoods.setCollect(false);
+//            tNews.setLike(false);
+        }else {
+            Long userId = redisCache.getCacheObject(request.getHeader("token"));
+            //校验用户id是否存在
+            TAppUser appUser = tAppUserService.selectTAppUserById(userId);
+            if (null == appUser || null == appUser.getUserId()) {
+                uflag = false;
+                tGoods.setCollect(false);
+//                tNews.setLike(false);
+            }
+            if (uflag) {
+                // 带出用户是否收藏
+                TGoodcollect tGoodcollect = new TGoodcollect();
+                tGoodcollect.setGoodId(id.toString());
+                tGoodcollect.setUserId(userId.toString());
+                List<TGoodcollect> c = tGoodcollectService.selectTGoodcollectList(tGoodcollect);
+                if (null != c && c.size() > 0) {
+                    tGoods.setCollect(true);
+                } else {
+                    tGoods.setCollect(false);
+                }
+            }
+        }
+        return AjaxResult.success(tGoods);
     }
 
     @Log(title = "商品", businessType = BusinessType.INSERT)
