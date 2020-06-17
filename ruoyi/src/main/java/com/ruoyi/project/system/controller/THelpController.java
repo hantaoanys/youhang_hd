@@ -1,6 +1,8 @@
 package com.ruoyi.project.system.controller;
 
 import java.util.List;
+
+import com.ruoyi.common.utils.sign.Base64;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +43,9 @@ public class THelpController extends BaseController
     {
         startPage();
         List<THelp> list = tHelpService.selectTHelpList(tHelp);
+        for (THelp t: list){
+            t.setBody(new String(Base64.decode(t.getBody())));
+        }
         return getDataTable(list);
     }
 
@@ -62,7 +67,9 @@ public class THelpController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return AjaxResult.success(tHelpService.selectTHelpById(id));
+        THelp tHelp = tHelpService.selectTHelpById(id);
+        tHelp.setBody(new String(Base64.decode(tHelp.getBody())));
+        return AjaxResult.success(tHelp);
     }
 
     /**

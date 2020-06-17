@@ -9,6 +9,7 @@ import com.ruoyi.common.exception.file.FileSizeLimitExceededException;
 import com.ruoyi.common.exception.file.InvalidExtensionException;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.MimeTypeUtils;
+import com.ruoyi.common.utils.sign.Base64;
 import com.ruoyi.framework.config.RuoYiConfig;
 import com.ruoyi.framework.config.ServerConfig;
 import com.ruoyi.framework.redis.RedisCache;
@@ -93,6 +94,7 @@ public class TGoodsController extends BaseController
     {
 
         TGoods tGoods =  tGoodsService.selectTGoodsById(id);
+        tGoods.setParam1(new String(Base64.decode(tGoods.getParam1())));
         String token = request.getHeader("token");
         Boolean uflag = true;
         if(null == token){

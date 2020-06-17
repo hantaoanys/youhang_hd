@@ -2,6 +2,7 @@ package com.ruoyi.project.system.controller;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.sign.Base64;
 import com.ruoyi.framework.redis.RedisCache;
 import com.ruoyi.project.system.domain.TAppUser;
 import com.ruoyi.project.system.domain.TNewsCollect;
@@ -66,6 +67,7 @@ public class TNewsController extends BaseController
     public AjaxResult getInfo(@PathVariable("id") Long id, HttpServletRequest request)
     {
         TNews tNews =  tNewsService.selectTNewsById(id);
+        tNews.setNewsBody(new String(Base64.decode(tNews.getNewsBody())));
         String token = request.getHeader("token");
         Boolean uflag = true;
         if(null == token){

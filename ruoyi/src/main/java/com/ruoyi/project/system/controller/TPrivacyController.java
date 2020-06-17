@@ -1,6 +1,8 @@
 package com.ruoyi.project.system.controller;
 
 import java.util.List;
+
+import com.ruoyi.common.utils.sign.Base64;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +43,9 @@ public class TPrivacyController extends BaseController
     {
         startPage();
         List<TPrivacy> list = tPrivacyService.selectTPrivacyList(tPrivacy);
+        for (TPrivacy t : list){
+            t.setBody(new String(Base64.decode(t.getBody())));
+        }
         return getDataTable(list);
     }
 
@@ -62,7 +67,9 @@ public class TPrivacyController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return AjaxResult.success(tPrivacyService.selectTPrivacyById(id));
+        TPrivacy t = tPrivacyService.selectTPrivacyById(id);
+        t.setBody(new String(Base64.decode(t.getBody())));
+        return AjaxResult.success(t);
     }
 
     /**
