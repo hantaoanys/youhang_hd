@@ -161,7 +161,7 @@ public class TUserInviteController extends BaseController
      * APP 修改用户邀请商
      */
     @Log(title = "用户邀请商", businessType = BusinessType.UPDATE)
-    @PostMapping("/APP")
+    @PostMapping("/app/update")
     public Object editApp(@RequestBody TUserInvite tUserInvite,HttpServletRequest request)
     {
         JSONObject ret = new JSONObject();

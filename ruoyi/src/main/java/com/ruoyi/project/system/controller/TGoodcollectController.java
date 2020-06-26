@@ -1,12 +1,15 @@
 package com.ruoyi.project.system.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.framework.redis.RedisCache;
 import com.ruoyi.project.system.domain.TAppUser;
+import com.ruoyi.project.system.domain.TGoods;
 import com.ruoyi.project.system.service.ITAppUserService;
+import com.ruoyi.project.system.service.ITGoodsService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,6 +49,9 @@ public class TGoodcollectController extends BaseController
     @Autowired
     private RedisCache redisCache;
 
+    @Autowired
+    private ITGoodsService tGoodsService;
+
     /**
      * 查询商品收藏列表
      */
@@ -82,8 +88,19 @@ public class TGoodcollectController extends BaseController
             }
         }
         startPage();
+        List<TGoods> goodList = new ArrayList<>();
         List<TGoodcollect> list = tGoodcollectService.selectTGoodcollectList(tGoodcollect);
-        return getDataTable(list);
+        if (null !=list){
+            for (TGoodcollect t:list){
+                if (null != t.getGoodId()){
+                    TGoods tGoods=  tGoodsService.selectTGoodsById(Long.valueOf(t.getGoodId()));
+                    goodList.add(tGoods);
+                }
+
+            }
+        }
+
+        return getDataTable(goodList);
     }
 
     /**

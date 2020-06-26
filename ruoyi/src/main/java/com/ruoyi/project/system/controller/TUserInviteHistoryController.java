@@ -55,6 +55,25 @@ public class TUserInviteHistoryController extends BaseController
 
 
     /**
+     * WEB 查询提现流水列表
+     */
+    @GetMapping("/list/web")
+    public Object webList(TUserInviteHistory tUserInviteHistory) throws Exception {
+
+        startPage();
+        List<TUserInviteHistory> list = tUserInviteHistoryService.selectTUserInviteHistoryList(tUserInviteHistory);
+        if (null != list && list.size()>0){
+            for (TUserInviteHistory t : list){
+                t.setPhone(t.getPhone().substring(0, 3) + "****" + t.getPhone().substring(7, t.getPhone().length()));
+            }
+        }
+
+        return getDataTable(list);
+    }
+
+
+
+    /**
      * APP 查询提现流水列表
      */
     @GetMapping("/list/app")

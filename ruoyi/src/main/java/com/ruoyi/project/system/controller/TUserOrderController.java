@@ -1,5 +1,7 @@
 package com.ruoyi.project.system.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.alibaba.fastjson.JSON;
@@ -177,16 +179,22 @@ public class TUserOrderController extends BaseController
         //先创建预付费订单
         TUserOrder tUserOrder = new TUserOrder();
         tUserOrder.setGoodId(Long.valueOf(goodId));
+
         tUserOrder.setGoodName(tGoods.getName());
+        tUserOrder.setGoodDesc(tGoods.getSketch());
+        tUserOrder.setGoodPath(tGoods.getPicture());
 //        tUserOrder.setGoodType(tGoods.getKeywords());
-        tUserOrder.setPayMoney(Math.round(tGoods.getPrice()));
-        tUserOrder.setServiceProcess(""); //服务进度
+        tUserOrder.setPayMoney(tGoods.getPrice());
+        tUserOrder.setServiceProcess("未付款"); //服务进度
         tUserOrder.setCreateTime(new Date());
         tUserOrder.setDelFlag("0"); //暂未付款
         tUserOrder.setUserId(userId);
         int count = tUserOrderService.insertTUserOrder(tUserOrder);
         System.out.println("主键是：");
         System.out.println(tUserOrder.getId());
+
+        tUserOrder.setOrderId("DD"+getOrderIdByTime()+tUserOrder.getId());
+        tUserOrderService.updateTUserOrder(tUserOrder);
 
 
         String appId = "2021001167649092";
@@ -206,6 +214,7 @@ public class TUserOrderController extends BaseController
         model.setProductCode("QUICK_MSECURITY_PAY");
         request.setBizModel(model);
         request.setNotifyUrl("119.45.144.182/appapi/system/order/return");
+        request.setReturnUrl("/pages/user/money/success");
         try {
             //这里和普通的接口调用不同，使用的是sdkExecute
             AlipayTradeAppPayResponse response = alipayClient.sdkExecute(request);
@@ -218,31 +227,19 @@ public class TUserOrderController extends BaseController
     }
 
     public static void main(String[] args) throws AlipayApiException {
-        String appId = "2021001165672086";
-        String priKey = "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCigcuXKhKn8VeTSG0lRWeNDKHCWPFcNQmlRqpLKjbb8GL01am6QqJHfN9gzYZZ2xjTWVV3ode8LS/J/2toeQtY65Z3sgTzlZXwTxZGUAs6ge+BxkzinsAmybU1lKvHC04Y2m/u93ft+wEIjZr91BFnV8mtvQVSO3GHeAoe8Qj/1qapZvo20icYrrPcuYCY2Y2lAnlRedabMfVDq4tX/++9nAkQ2Ye2n7pj9bNPhEB+EyzN0474I0IQLJVCVEFXWPuJ0rWK+488zmAotGtrC9xQdp9K8UcYt6XUr2mdQcT8w9IfiPOlQx1yHZxlHGahCBr6CpOjp1zb10WPeuhoxAWrAgMBAAECggEAbsWtAqjCOMpxWMsY4zwRHvuKVBEOzTy2C3xE3qGy7W9J9PykCnwbZEGBftn6B8wqev69HKQsi2/90GKUU42XJ5DHa2XkrCm+ICW42Er9rG8f1MVYaW2vK4F5TUG/ahmRra1QeYMktArSJINqMDXbeydDKXPcabZtZ9tygq7o5ILVKo4BB94Wiv1kWKV4MhdUvJMauphbTR9YKDN1VTWMZ+vbKXG+GjcQe4FX4r00TdY6wwMa4/B6RzInkEdDR69kqenzGMfmLL4UO7bfNOIMwsMjViKmfY6ghyf/2ehz2Rcbr4J1/p6BrWc5PIUF/zFnIdWX7UfnrZ9hOhP+WYTqGQKBgQDa68L3klSHeH4rdHrSrUuV5Ckh+ytkdaFlRH/sUBWiWlGelPld/zWNBRPjMiP/qo6yKUgfvqgVJHg4fv7Q3mPpdTigRPLyZX2FtaXtbm4pK6R/vDVWyJ5lxCmtoAQJnUTzOrqR5WViDLp0VylnCe0D/N03xPizhsgTrOdFl/lJtQKBgQC+B/hsZP1yR5Qpc7xRAgD2nQ0gUHX21xTVP0HS7ypvU7yM6ru5oKV6fpzvejuldzCahTMNlO696Sbn1D1kDgKh/sm4j5RM4pGzPJHzcmZeKUBGZEy0nePRe9XEUmsCn5MbQXHyCzVSTHLZRcqv18ulRV3Coty6u5zTZzbcqwgt3wKBgQC4ggnRZKgPgVM9Rq+ZzmqtCx5LwIgC5E1Br2jtf1WsftjZgg9l1ImKsCPh0Umb2mDn8XkTIDpDj3gvjYEwAq9MfPpbwaDNARK41a7iHLeFxX2gFr0RxoYRmTHTXtDoVX9eTDogaql26Olg0nFXoXr8aGr97On7TPZl9sz4z6xQHQKBgQCgcBRCV8VPTbV+hdMxRZLQo2nopWXjAFX7cIu/beMS2Myw4KGbqFDtqaYP3dAr9ARaASlIRzyFpCoPwrYOGnIImRdwNfCMNSG0BOhodGaPCx7UD2xfdYpZW8bwGHF2ZomJkmiEZQggsqCoZe8pJPUvVPBDGsNm+G0AYv0Ds3aVWwKBgQC1celU0Ul91vY+EwtligFib9GApQazp5Peaaq0+QLLyrXfqiUjN9/28XlKchpmgbl1vDRvGRcp7J7RwpZ2+dcYqQBT25EORhro2aZnttTRFSEI/xC9zvFna0w+rE/FM5CdTmxRqILtRE9meDP95BXra/6xari7cviNDGx86CdBCg==";
-        String pubKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAooHLlyoSp/FXk0htJUVnjQyhwljxXDUJpUaqSyo22/Bi9NWpukKiR3zfYM2GWdsY01lVd6HXvC0vyf9raHkLWOuWd7IE85WV8E8WRlALOoHvgcZM4p7AJsm1NZSrxwtOGNpv7vd37fsBCI2a/dQRZ1fJrb0FUjtxh3gKHvEI/9amqWb6NtInGK6z3LmAmNmNpQJ5UXnWmzH1Q6uLV//vvZwJENmHtp+6Y/WzT4RAfhMszdOO+CNCECyVQlRBV1j7idK1ivuPPM5gKLRrawvcUHafSvFHGLel1K9pnUHE/MPSH4jzpUMdch2cZRxmoQga+gqTo6dc29dFj3roaMQFqwIDAQAB";
-        //实例化客户端
-        AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do", appId, priKey, "json", "utf-8", pubKey, "RSA2");
-//实例化具体API对应的request类,类名称和接口名称对应,当前调用接口名称：alipay.trade.app.pay
-        AlipayTradeAppPayRequest request = new AlipayTradeAppPayRequest();
-//SDK已经封装掉了公共参数，这里只需要传入业务参数。以下方法为sdk的model入参方式(model和biz_content同时存在的情况下取biz_content)。
-        AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
-        model.setBody("我是测试数据");
-        model.setSubject("App支付测试Java");
-        model.setOutTradeNo("asdasdasd");
-        model.setTimeoutExpress("30m");
-        model.setTotalAmount("0.01");
-        model.setProductCode("QUICK_MSECURITY_PAY");
-        request.setBizModel(model);
-        request.setNotifyUrl("商户外网可以访问的异步地址");
-        try {
-            //这里和普通的接口调用不同，使用的是sdkExecute
-            AlipayTradeAppPayResponse response = alipayClient.sdkExecute(request);
-            System.out.println(response.getBody());//就是orderString 可以直接给客户端请求，无需再做处理。
-        } catch (AlipayApiException e) {
-            e.printStackTrace();
-        }
 
+        //获取订单编码
+        System.out.println(getOrderIdByTime());
+    }
+    public static String getOrderIdByTime() {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
+        String newDate=sdf.format(new Date());
+        String result="";
+        Random random=new Random();
+        for(int i=0;i<3;i++){
+            result+=random.nextInt(10);
+        }
+        return newDate+result;
     }
 
 

@@ -108,6 +108,17 @@ public class TAppUserController extends BaseController
         return toAjax(tAppUserService.updateTAppUser(tAppUser));
     }
 
+
+    /**
+     * 修改用户信息
+     */
+    @Log(title = "用户信息", businessType = BusinessType.UPDATE)
+    @PostMapping("/app/updateUser")
+    public AjaxResult updateUser(@RequestBody TAppUser tAppUser)
+    {
+        return toAjax(tAppUserService.updateTAppUser(tAppUser));
+    }
+
     /**
      * 删除用户信息
      */

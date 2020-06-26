@@ -52,6 +52,22 @@ public class TUserInvitegoodsController extends BaseController
 
 
     /**
+     * web
+     */
+    @GetMapping("/list/web")
+    public Object webList(TUserInvitegoods tUserInvitegoods, HttpServletRequest request)
+    {
+        startPage();
+        List<TUserInvitegoods> list = tUserInvitegoodsService.selectTUserInvitegoodsList(tUserInvitegoods);
+        if(null!=list && list.size()>0){
+            for(TUserInvitegoods t:list){
+                t.setPhone(t.getPhone().substring(0, 3) + "****" + t.getPhone().substring(7, t.getPhone().length()));
+            }
+        }
+        return getDataTable(list);
+    }
+
+    /**
      * APP查询邀请流水列表
      */
     @GetMapping("/list/app")

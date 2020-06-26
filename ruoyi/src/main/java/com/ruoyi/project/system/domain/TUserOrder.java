@@ -18,6 +18,9 @@ public class TUserOrder extends BaseEntity
     /** id */
     private Long id;
 
+    private  String orderId;
+    private  String process;
+    private  String goodDesc;
     /** 用户ID */
     @Excel(name = "用户ID")
     private Long userId;
@@ -43,7 +46,7 @@ public class TUserOrder extends BaseEntity
 
     /** 消费金额 */
     @Excel(name = "消费金额")
-    private Long payMoney;
+    private double payMoney;
 
     /** 服务进度 */
     @Excel(name = "服务进度")
@@ -106,12 +109,12 @@ public class TUserOrder extends BaseEntity
     {
         return goodType;
     }
-    public void setPayMoney(Long payMoney) 
+    public void setPayMoney(Double payMoney)
     {
         this.payMoney = payMoney;
     }
 
-    public Long getPayMoney() 
+    public double getPayMoney()
     {
         return payMoney;
     }
@@ -140,6 +143,30 @@ public class TUserOrder extends BaseEntity
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getProcess() {
+        return process;
+    }
+
+    public void setProcess(String process) {
+        this.process = process;
+    }
+
+    public String getGoodDesc() {
+        return goodDesc;
+    }
+
+    public void setGoodDesc(String goodDesc) {
+        this.goodDesc = goodDesc;
     }
 
     @Override

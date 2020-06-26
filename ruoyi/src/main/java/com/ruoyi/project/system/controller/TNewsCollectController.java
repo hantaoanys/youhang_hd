@@ -1,12 +1,15 @@
 package com.ruoyi.project.system.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.framework.redis.RedisCache;
 import com.ruoyi.project.system.domain.TAppUser;
+import com.ruoyi.project.system.domain.TNews;
 import com.ruoyi.project.system.service.ITAppUserService;
+import com.ruoyi.project.system.service.ITNewsService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,6 +48,8 @@ public class TNewsCollectController extends BaseController
 
     @Autowired
     private RedisCache redisCache;
+    @Autowired
+    private ITNewsService tNewsService;
     /**
      * 查询新闻收藏列表
      */
@@ -81,8 +86,19 @@ public class TNewsCollectController extends BaseController
             }
         }
         startPage();
+        List<TNews> tnewslist = new ArrayList();
         List<TNewsCollect> list = tNewsCollectService.selectTNewsCollectList(tNewsCollect);
-        return getDataTable(list);
+        if (null != list ){
+            for (TNewsCollect t :list){
+                if (null!=t.getNewsId()){
+                    TNews tNews = tNewsService.selectTNewsById(t.getNewsId());
+                    tnewslist.add(tNews);
+                }
+
+            }
+        }
+
+        return getDataTable(tnewslist);
     }
 
 
