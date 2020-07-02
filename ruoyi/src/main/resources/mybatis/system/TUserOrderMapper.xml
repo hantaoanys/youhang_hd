@@ -8,6 +8,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="orderId"    column="order_id"    />
         <result property="userId"    column="user_id"    />
+        <result property="phone"    column="phone"    />
+        <result property="userName"    column="userName"    />
         <result property="goodName"    column="good_name"    />
         <result property="goodDesc"    column="good_desc"    />
         <result property="goodPath"    column="good_path"    />
@@ -29,7 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectTUserOrderList" parameterType="TUserOrder" resultMap="TUserOrderResult">
-        select t1.id,t1.order_id,t1.process, t2.phonenumber as phone, t1.user_id, t1.good_name, t1.good_desc,t1.good_path, t1.good_id, t1.good_type, t1.pay_money,
+        select t1.id,t1.order_id,t1.process, t2.phonenumber as phone,t2.user_name as userName, t1.user_id, t1.good_name, t1.good_desc,t1.good_path, t1.good_id, t1.good_type, t1.pay_money,
         t1.service_process, t1.del_flag, t1.create_by, t1.create_time, t1.update_by, t1.update_time, t1.remark
         from t_user_order t1, t_app_user t2
 
@@ -38,19 +40,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             and (t1.del_flag != '0' or t1.del_flag is null)
             <if test="userId != null "> and t1.user_id = #{userId}</if>
             <if test="phone != null  and phone != ''"> and t2.phonenumber like concat('%', #{phone}, '%')</if>
+            <if test="userName != null  and userName != ''"> and t2.user_name like concat('%', #{userName}, '%')</if>
             <if test="goodName != null  and goodName != ''"> and t1.good_name like concat('%', #{goodName}, '%')</if>
             <if test="goodPath != null  and goodPath != ''"> and t1.good_path = #{goodPath}</if>
             <if test="goodId != null "> and t1.good_id = #{goodId}</if>
             <if test="goodType != null "> and t1.good_type = #{goodType}</if>
-            <if test="payMoney != null "> and t1.pay_money = #{payMoney}</if>
+<!--            <if test="payMoney != null "> and t1.pay_money = #{payMoney}</if>-->
             <if test="serviceProcess != null  and serviceProcess != ''"> and t1.service_process = #{serviceProcess}</if>
             <if test="process != null  and process != ''"> and t1.process = #{process}</if>
         </where>
     </select>
     
     <select id="selectTUserOrderById" parameterType="Long" resultMap="TUserOrderResult">
-        <include refid="selectTUserOrderVo"/>
-        where id = #{id}
+        select t1.id,t1.order_id,t1.process, t2.phonenumber as phone,t2.user_name as userName, t1.user_id, t1.good_name, t1.good_desc,t1.good_path, t1.good_id, t1.good_type, t1.pay_money,
+        t1.service_process, t1.del_flag, t1.create_by, t1.create_time, t1.update_by, t1.update_time, t1.remark
+        from t_user_order t1, t_app_user t2
+        where
+             t1.user_id = t2.user_id
+            and (t1.del_flag != '0' or t1.del_flag is null)
+            and t1.id = #{id}
     </select>
         
     <insert id="insertTUserOrder" parameterType="TUserOrder" useGeneratedKeys="true" keyProperty="id">
@@ -103,7 +111,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="goodDesc != null  and goodDesc != ''">good_desc = #{goodDesc},</if>
             <if test="goodId != null ">good_id = #{goodId},</if>
             <if test="goodType != null ">good_type = #{goodType},</if>
-            <if test="payMoney != null ">pay_money = #{payMoney},</if>
+           <!-- <if test="payMoney != null ">pay_money = #{payMoney},</if>-->
             <if test="serviceProcess != null  and serviceProcess != ''">service_process = #{serviceProcess},</if>
             <if test="process != null  and process != ''">process = #{process},</if>
             <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>

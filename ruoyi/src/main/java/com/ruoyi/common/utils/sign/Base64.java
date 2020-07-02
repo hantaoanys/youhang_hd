@@ -288,4 +288,9 @@ public final class Base64
         }
         return newSize;
     }
+
+    public static void main(String[] args) {
+        System.out.println(encode("<p>123</p>".getBytes()));
+//        System.out.println(decode("PHA+YWJjZGVmZyomYW1wO14lJDwvcD4="));
+    }
 }

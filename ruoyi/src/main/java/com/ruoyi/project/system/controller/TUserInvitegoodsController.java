@@ -92,7 +92,7 @@ public class TUserInvitegoodsController extends BaseController
             }
         }
         startPage();
-        List<TUserInvitegoods> list = tUserInvitegoodsService.selectTUserInvitegoodsList(tUserInvitegoods);
+        List<TUserInvitegoods> list = tUserInvitegoodsService.selectTUserInvitegoodsListForApp(tUserInvitegoods);
         if(null!=list && list.size()>0){
             for(TUserInvitegoods t:list){
                 t.setPhone(t.getPhone().substring(0, 3) + "****" + t.getPhone().substring(7, t.getPhone().length()));

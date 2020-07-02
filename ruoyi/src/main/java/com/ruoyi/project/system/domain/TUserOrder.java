@@ -18,6 +18,8 @@ public class TUserOrder extends BaseEntity
     /** id */
     private Long id;
 
+    private String userName;
+
     private  String orderId;
     private  String process;
     private  String goodDesc;
@@ -42,7 +44,7 @@ public class TUserOrder extends BaseEntity
 
     /** 商品类型 */
     @Excel(name = "商品类型")
-    private Long goodType;
+    private String goodType;
 
     /** 消费金额 */
     @Excel(name = "消费金额")
@@ -96,19 +98,7 @@ public class TUserOrder extends BaseEntity
         this.goodId = goodId;
     }
 
-    public Long getGoodId() 
-    {
-        return goodId;
-    }
-    public void setGoodType(Long goodType) 
-    {
-        this.goodType = goodType;
-    }
 
-    public Long getGoodType() 
-    {
-        return goodType;
-    }
     public void setPayMoney(Double payMoney)
     {
         this.payMoney = payMoney;
@@ -167,6 +157,30 @@ public class TUserOrder extends BaseEntity
 
     public void setGoodDesc(String goodDesc) {
         this.goodDesc = goodDesc;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setPayMoney(double payMoney) {
+        this.payMoney = payMoney;
+    }
+
+    public Long getGoodId() {
+        return goodId;
+    }
+
+    public String getGoodType() {
+        return goodType;
+    }
+
+    public void setGoodType(String goodType) {
+        this.goodType = goodType;
     }
 
     @Override

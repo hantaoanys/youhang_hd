@@ -5,7 +5,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.project.system.mapper.TUserInviteHistoryMapper">
     
     <resultMap type="TUserInviteHistory" id="TUserInviteHistoryResult">
+        <result property="id"    column="id"    />
         <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="zfbAccount"    column="zfb_account"    />
+        <result property="zfbName"    column="zfb_name"    />
         <result property="phone"    column="phone"    />
         <result property="money"    column="money"    />
         <result property="status"    column="status"    />
@@ -18,28 +22,40 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTUserInviteHistoryVo">
-        select user_id, phone, money, status, del_flag, create_by, create_time, update_by, update_time, remark from t_user_invite_history
+        select id,user_id, user_name,zfb_account,zfb_name,phone, money, status, del_flag, create_by, create_time, update_by, update_time, remark from t_user_invite_history
     </sql>
 
     <select id="selectTUserInviteHistoryList" parameterType="TUserInviteHistory" resultMap="TUserInviteHistoryResult">
         <include refid="selectTUserInviteHistoryVo"/>
-        <where>  
+        <where>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="userName != null  and userName != ''"> and user_name = #{userName}</if>
+
+            <if test="zfbAccount != null  and zfbAccount != ''"> and zfb_account = #{zfbAccount}</if>
+
+            <if test="zfbName != null  and zfbName != ''"> and zfb_name = #{zfbName}</if>
+
             <if test="money != null "> and money = #{money}</if>
             <if test="status != null "> and status = #{status}</if>
         </where>
-        ORDER BY create_time
+
+        ORDER BY status,create_time
     </select>
     
     <select id="selectTUserInviteHistoryById" parameterType="Long" resultMap="TUserInviteHistoryResult">
         <include refid="selectTUserInviteHistoryVo"/>
-        where user_id = #{userId}
+        where id = #{id}
     </select>
         
     <insert id="insertTUserInviteHistory" parameterType="TUserInviteHistory" useGeneratedKeys="true" keyProperty="userId">
         insert into t_user_invite_history
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null  and userId != ''">user_id,</if>
             <if test="phone != null  and phone != ''">phone,</if>
+            <if test="userName != null  and userName != ''">user_name,</if>
+            <if test="zfbAccount != null  and zfbAccount != ''">zfb_account,</if>
+            <if test="zfbName != null  and zfbName != ''">zfb_name,</if>
             <if test="money != null ">money,</if>
             <if test="status != null ">status,</if>
             <if test="delFlag != null  and delFlag != ''">del_flag,</if>
@@ -50,7 +66,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null  and remark != ''">remark,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null  and userId != ''">#{userId},</if>
             <if test="phone != null  and phone != ''">#{phone},</if>
+            <if test="userName != null  and userName != ''">#{userName},</if>
+            <if test="zfbAccount != null  and zfbAccount != ''">#{zfbAccount},</if>
+            <if test="zfbName != null  and zfbName != ''">#{zfbName},</if>
             <if test="money != null ">#{money},</if>
             <if test="status != null ">#{status},</if>
             <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
@@ -65,6 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateTUserInviteHistory" parameterType="TUserInviteHistory">
         update t_user_invite_history
         <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null  and userId != ''">user_id = #{userId},</if>
             <if test="phone != null  and phone != ''">phone = #{phone},</if>
             <if test="money != null ">money = #{money},</if>
             <if test="status != null ">status = #{status},</if>
@@ -75,18 +96,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null ">update_time = #{updateTime},</if>
             <if test="remark != null  and remark != ''">remark = #{remark},</if>
         </trim>
-        where user_id = #{userId}
+        where id = #{id}
     </update>
 
     <delete id="deleteTUserInviteHistoryById" parameterType="Long">
-        delete from t_user_invite_history where user_id = #{userId}
+        delete from t_user_invite_history where id = #{id}
     </delete>
 
     <delete id="deleteTUserInviteHistoryByIds" parameterType="String">
-        delete from t_user_invite_history where user_id in 
-        <foreach item="userId" collection="array" open="(" separator="," close=")">
-            #{userId}
+        delete from t_user_invite_history where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
         </foreach>
     </delete>
+
+    <update id="verify" parameterType="TUserInviteHistory">
+        update t_user_invite_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null  and userId != ''">user_id = #{userId},</if>
+            <if test="phone != null  and phone != ''">phone = #{phone},</if>
+            <if test="money != null ">money = #{money},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
     
 </mapper>

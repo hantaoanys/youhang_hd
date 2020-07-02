@@ -20,6 +20,9 @@ import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * app升级Controller
  * 
@@ -33,6 +36,23 @@ public class TAppupdateController extends BaseController
     @Autowired
     private ITAppupdateService tAppupdateService;
 
+//    /**
+//     * 查询app升级列表
+//     */
+//    @GetMapping("/getAppDowload")
+//    public Object list(HttpServletRequest request, HttpServletResponse response)
+//    {
+//        response.setContentType();
+//        startPage();
+//        List<TAppupdate> list = tAppupdateService.selectTAppupdateList(tAppupdate);
+////        if (null != list && list.size()>0){
+////            return list.get(0);
+////        }
+//        return getDataTable(list);
+//    }
+
+
+
     /**
      * 查询app升级列表
      */
@@ -41,11 +61,26 @@ public class TAppupdateController extends BaseController
     {
         startPage();
         List<TAppupdate> list = tAppupdateService.selectTAppupdateList(tAppupdate);
+//        if (null != list && list.size()>0){
+//            return list.get(0);
+//        }
+        return getDataTable(list);
+    }
+
+
+    @GetMapping("/app/lastUpdate")
+    public Object lastUpdate()
+    {
+        TAppupdate tAppupdate = new TAppupdate();
+        startPage();
+        List<TAppupdate> list = tAppupdateService.selectTAppupdateList(tAppupdate);
         if (null != list && list.size()>0){
             return list.get(0);
         }
         return getDataTable(list);
     }
+
+
 
     /**
      * 导出app升级列表

@@ -93,4 +93,9 @@ public class TUserInvitegoodsServiceImpl implements ITUserInvitegoodsService
     {
         return tUserInvitegoodsMapper.deleteTUserInvitegoodsById(id);
     }
+
+    @Override
+    public List<TUserInvitegoods> selectTUserInvitegoodsListForApp(TUserInvitegoods tUserInvitegoods) {
+        return tUserInvitegoodsMapper.selectTUserInvitegoodsListForApp(tUserInvitegoods);
+    }
 }

@@ -1,5 +1,6 @@
 package com.ruoyi.project.system.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,5 +93,10 @@ public class TUserInviteHistoryServiceImpl implements ITUserInviteHistoryService
     public int deleteTUserInviteHistoryById(Long userId)
     {
         return tUserInviteHistoryMapper.deleteTUserInviteHistoryById(userId);
+    }
+
+    @Override
+    public void verify(HashMap map) {
+        tUserInviteHistoryMapper.verify(map);
     }
 }

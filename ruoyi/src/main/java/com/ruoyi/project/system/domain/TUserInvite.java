@@ -25,6 +25,10 @@ public class TUserInvite extends BaseEntity
     @Excel(name = "用户手机号")
     private String phone;
 
+
+    @Excel(name = "用户姓名")
+    private String userName;
+
     /** 我的邀请码 */
     @Excel(name = "我的邀请码")
     private String inviteCode;
@@ -161,6 +165,14 @@ public class TUserInvite extends BaseEntity
 
     public void settUserInviteHistory(TUserInviteHistory tUserInviteHistory) {
         this.tUserInviteHistory = tUserInviteHistory;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     @Override

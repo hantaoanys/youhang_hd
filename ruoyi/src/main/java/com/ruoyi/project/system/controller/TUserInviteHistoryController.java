@@ -1,6 +1,7 @@
 package com.ruoyi.project.system.controller;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
@@ -171,7 +172,7 @@ public class TUserInviteHistoryController extends BaseController
                 tUserInviteHistory.setUserId(userId);
                 TUserInviteHistory history = new TUserInviteHistory();
                 history.setUserId(userId);
-                history.setStatus(1L); //审核状态 4.提现成功 3.审核失败 2:审核通过 1:提交申请
+                history.setStatus("1"); //审核状态 4.提现成功 3.审核失败 2:审核通过 1:提交申请
                 List<TUserInviteHistory> list = tUserInviteHistoryService.selectTUserInviteHistoryList(history);
                 if (null !=list && list.size()>0 ){
                     ret.put("msg", "存在暂未审核的提现，无法申请提现，请等待审核");
@@ -185,13 +186,16 @@ public class TUserInviteHistoryController extends BaseController
                     return ret;
                 }
 
-                tUserInviteHistory.setStatus(1L);
+                tUserInviteHistory.setStatus("1");
                 tUserInviteHistory.setCreateTime(new Date());
                 tUserInviteHistory.setMoney(tUserInvite.getInviteMoneyNot());
                 TAppUser user =  tAppUserService.selectTAppUserById(userId);
                 tUserInviteHistory.setPhone(user.getPhonenumber());
-
+                tUserInviteHistory.setUserName(user.getUserName());
+                tUserInviteHistory.setZfbAccount(tUserInvite.getZfbAccount());
+                tUserInviteHistory.setZfbName(tUserInvite.getZfbName());
                 //更新主表的 未体现金额，已提现金额。
+                tUserInvite.setInviteMoneyAlready(tUserInvite.getInviteMoneyAlready() +tUserInvite.getInviteMoneyNot());
                 tUserInvite.setInviteMoneyNot(0L);
                 tUserInvite.setInviteMoneyAlready(tUserInvite.getInviteMoneyAlready() +tUserInvite.getInviteMoneyNot());
                 tUserInviteService.updateTUserInvite(tUserInvite);
@@ -231,5 +235,27 @@ public class TUserInviteHistoryController extends BaseController
     public AjaxResult remove(@PathVariable Long[] userIds)
     {
         return toAjax(tUserInviteHistoryService.deleteTUserInviteHistoryByIds(userIds));
+    }
+
+
+
+    //管理员web端审核接口
+
+    /**
+     * APP申请提现
+     */
+    @PostMapping("/web/verify")
+    public Object appAdd(@RequestBody JSONObject jsonObject) throws Exception {
+        JSONObject ret = new JSONObject();
+        HashMap map = new HashMap();
+        map.put("id",jsonObject.get("id"));
+        map.put("status",jsonObject.get("status"));
+        map.put("remark",jsonObject.get("remark"));
+        map.put("updateTime",new Date());
+        tUserInviteHistoryService.verify(map);
+
+        ret.put("code",200);
+        ret.put("msg","操作成功");
+        return ret;
     }
 }

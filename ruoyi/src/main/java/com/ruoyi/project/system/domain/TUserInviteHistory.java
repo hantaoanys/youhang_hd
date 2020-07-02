@@ -15,7 +15,12 @@ public class TUserInviteHistory extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
+    private String zfbAccount;
+    private String zfbName;
+    private String userName;
+
     /** 用户ID */
+    private Long id;
     private Long userId;
 
     /** 用户手机号 */
@@ -28,7 +33,7 @@ public class TUserInviteHistory extends BaseEntity
 
     /** 审核状态 4.提现成功 3.审核失败 2:审核通过 1:提交申请 */
     @Excel(name = "审核状态 4.提现成功 3.审核失败 2:审核通过 1:提交申请")
-    private Long status;
+    private String status;
 
     /** 删除标志（0代表存在 2代表删除） */
     private String delFlag;
@@ -60,7 +65,7 @@ public class TUserInviteHistory extends BaseEntity
     {
         return money;
     }
-    public void setStatus(Long status) 
+   /* public void setStatus(Long status)
     {
         this.status = status;
     }
@@ -68,7 +73,7 @@ public class TUserInviteHistory extends BaseEntity
     public Long getStatus() 
     {
         return status;
-    }
+    }*/
     public void setDelFlag(String delFlag) 
     {
         this.delFlag = delFlag;
@@ -77,6 +82,46 @@ public class TUserInviteHistory extends BaseEntity
     public String getDelFlag() 
     {
         return delFlag;
+    }
+
+    public String getZfbAccount() {
+        return zfbAccount;
+    }
+
+    public void setZfbAccount(String zfbAccount) {
+        this.zfbAccount = zfbAccount;
+    }
+
+    public String getZfbName() {
+        return zfbName;
+    }
+
+    public void setZfbName(String zfbName) {
+        this.zfbName = zfbName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override

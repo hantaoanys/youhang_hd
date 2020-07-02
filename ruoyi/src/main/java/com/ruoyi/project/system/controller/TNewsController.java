@@ -67,7 +67,9 @@ public class TNewsController extends BaseController
     public AjaxResult getInfo(@PathVariable("id") Long id, HttpServletRequest request)
     {
         TNews tNews =  tNewsService.selectTNewsById(id);
-        tNews.setNewsBody(new String(Base64.decode(tNews.getNewsBody())));
+        if (null != tNews.getNewsBody()){
+            tNews.setNewsBody(new String(Base64.decode(tNews.getNewsBody())));
+        }
         String token = request.getHeader("token");
         Boolean uflag = true;
         if(null == token){

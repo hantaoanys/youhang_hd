@@ -58,4 +58,6 @@ public interface TUserInvitegoodsMapper
      * @return 结果
      */
     public int deleteTUserInvitegoodsByIds(Long[] ids);
+
+    List<TUserInvitegoods> selectTUserInvitegoodsListForApp(TUserInvitegoods tUserInvitegoods);
 }

@@ -183,7 +183,7 @@ public class TUserOrderController extends BaseController
         tUserOrder.setGoodName(tGoods.getName());
         tUserOrder.setGoodDesc(tGoods.getSketch());
         tUserOrder.setGoodPath(tGoods.getPicture());
-//        tUserOrder.setGoodType(tGoods.getKeywords());
+        tUserOrder.setGoodType(tGoods.getKeywords());
         tUserOrder.setPayMoney(tGoods.getPrice());
         tUserOrder.setServiceProcess("未付款"); //服务进度
         tUserOrder.setCreateTime(new Date());

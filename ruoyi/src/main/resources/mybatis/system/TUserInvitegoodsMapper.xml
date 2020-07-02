@@ -26,7 +26,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectTUserInvitegoodsList" parameterType="TUserInvitegoods" resultMap="TUserInvitegoodsResult">
         <include refid="selectTUserInvitegoodsVo"/>
         <where>  
-            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userId != null "> and user_id in (select t1.user_id  from t_app_user t1 where t1.invite_code = (SELECT invite_code from t_user_invite where user_id = #{userId}))
+            </if>
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
             <if test="goodsId != null "> and goods_id = #{goodsId}</if>
             <if test="goodName != null  and goodName != ''"> and good_name like concat('%', #{goodName}, '%')</if>
@@ -34,7 +35,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="money != null "> and money = #{money}</if>
         </where>
     </select>
-    
+
+    <select id="selectTUserInvitegoodsListForApp" parameterType="TUserInvitegoods" resultMap="TUserInvitegoodsResult">
+        <include refid="selectTUserInvitegoodsVo"/>
+        <where>
+            user_id in (select t1.user_id  from t_app_user t1 where t1.invite_code = (SELECT invite_code from t_user_invite where user_id = #{userId}))
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="goodsId != null "> and goods_id = #{goodsId}</if>
+            <if test="goodName != null  and goodName != ''"> and good_name like concat('%', #{goodName}, '%')</if>
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="money != null "> and money = #{money}</if>
+
+        </where>
+        order by create_time DESC
+    </select>
+
+
+
     <select id="selectTUserInvitegoodsById" parameterType="Long" resultMap="TUserInvitegoodsResult">
         <include refid="selectTUserInvitegoodsVo"/>
         where id = #{id}

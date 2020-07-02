@@ -116,7 +116,7 @@ public class TUserInviteController extends BaseController
 
                     TUserInviteHistory history = new TUserInviteHistory();
                     history.setUserId(userId);
-                    history.setStatus(1L); //审核状态 4.提现成功 3.审核失败 2:审核通过 1:提交申请
+                    history.setStatus("1"); //审核状态 4.提现成功 3.审核失败 2:审核通过 1:提交申请
                     List<TUserInviteHistory> list = tUserInviteHistoryService.selectTUserInviteHistoryList(history);
                     if (null !=list && list.size()>0 ){
                         tUserInvite.setCanInvite(false);

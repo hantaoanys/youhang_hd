@@ -1,5 +1,6 @@
 package com.ruoyi.project.system.mapper;
 
+import java.util.HashMap;
 import java.util.List;
 import com.ruoyi.project.system.domain.TUserInviteHistory;
 
@@ -58,4 +59,6 @@ public interface TUserInviteHistoryMapper
      * @return 结果
      */
     public int deleteTUserInviteHistoryByIds(Long[] userIds);
+
+    void verify(HashMap map);
 }

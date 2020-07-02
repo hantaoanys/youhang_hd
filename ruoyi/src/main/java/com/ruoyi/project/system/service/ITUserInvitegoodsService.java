@@ -58,4 +58,6 @@ public interface ITUserInvitegoodsService
      * @return 结果
      */
     public int deleteTUserInvitegoodsById(Long id);
+
+    List<TUserInvitegoods> selectTUserInvitegoodsListForApp(TUserInvitegoods tUserInvitegoods);
 }

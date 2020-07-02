@@ -86,7 +86,11 @@ public class TGoodsController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return AjaxResult.success(tGoodsService.selectTGoodsById(id));
+        TGoods tGoods = tGoodsService.selectTGoodsById(id);
+        if (null != tGoods.getParam1()){
+            tGoods.setParam1(new String(Base64.decode(tGoods.getParam1())));
+        }
+        return AjaxResult.success(tGoods);
     }
 
     @GetMapping(value = "/app/{id}")
@@ -130,6 +134,10 @@ public class TGoodsController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody TGoods tGoods)
     {
+       /* if (null !=tGoods.getParam1()){
+            logger.info(new String(Base64.decode(tGoods.getParam1())));
+            tGoods.setParam1(new String(Base64.decode(tGoods.getParam1())));
+        }*/
         return toAjax(tGoodsService.insertTGoods(tGoods));
     }
 
